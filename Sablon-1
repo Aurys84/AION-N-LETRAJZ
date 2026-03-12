@@ -1,0 +1,55 @@
+# Aion Labor - Önéletrajz Generátor Sablon
+def generalj_oneletrajzot():
+    print("--- Aion Labor Önéletrajz Készítő ---")
+    
+    # 1. Adatgyűjtés (mint az űrlapnál)
+    nev = input("Teljes név: ")
+    cim = input("Lakcím: ")
+    tel = input("Telefonszám: ")
+    email = input("E-mail cím: ")
+    bemutatkozas = input("Rövid bemutatkozás: ")
+    tapasztalat = input("Munkatapasztalat (pl. Cég, dátum, pozíció): ")
+    keszsegek = input("Készségek (vesszővel elválasztva): ")
+
+    # 2. A dizájn sablon (HTML/CSS), ami hasonlít a képeidre
+    html_tartalom = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <style>
+        body {{ font-family: Arial, sans-serif; display: flex; margin: 0; }}
+        .oldalsav {{ background-color: #00a8cc; color: white; width: 30%; padding: 20px; min-height: 100vh; }}
+        .fo-tartalom {{ width: 70%; padding: 40px; }}
+        h1 {{ margin-top: 0; text-transform: uppercase; }}
+        .szekcio {{ margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }}
+    </style>
+    </head>
+    <body>
+        <div class="oldalsav">
+            <h2>KÉSZSÉGEK</h2>
+            <p>{keszsegek}</p>
+            <h2>ELÉRHETŐSÉG</h2>
+            <p>{cim}<br>{tel}<br>{email}</p>
+        </div>
+        <div class="fo-tartalom">
+            <h1>{nev}</h1>
+            <div class="szekcio">
+                <h3>BEMUTATKOZÁS</h3>
+                <p>{bemutatkozas}</p>
+            </div>
+            <div class="szekcio">
+                <h3>MUNKATAPASZTALAT</h3>
+                <p>{tapasztalat}</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    # 3. Mentés fájlba
+    with open("oneletrajz.html", "w", encoding="utf-8") as f:
+        f.write(html_tartalom)
+    
+    print("\nKész! Az 'oneletrajz.html' fájl elkészült a mappádban.")
+
+generalj_oneletrajzot()
