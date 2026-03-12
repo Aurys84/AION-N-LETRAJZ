@@ -1,31 +1,4 @@
-function generalas() {
-    // Adatok kiszedése
-    const adatok = {
-        nev: document.getElementById('nev').value,
-        cim: document.getElementById('cim').value,
-        tel: document.getElementById('tel').value,
-        email: document.getElementById('email').value,
-        bemutat: document.getElementById('bemutat').value,
-        tapa: document.getElementById('tapasztalat').value,
-        kesz: document.getElementById('keszseg').value
-    };
-
-    const fotoInput = document.getElementById('foto');
-    let fotoUrl = '';
-
-    if (fotoInput.files && fotoInput.files) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            fotoUrl = e.target.result;
-            generaltHtml(fotoUrl);
-        };
-        reader.readAsDataURL(fotoInput.files);
-    } else {
-        generaltHtml('');
-    }
-}
-
-function generaltHtml(fotoUrl) {
+function generaltHtml(fotoUrl, adatok) { // ✅ adatok paraméter hozzáadva
     const htmlTartalom = `
         <html>
         <body style="font-family: Arial; display: flex; margin: 0; min-height: 100vh;">
