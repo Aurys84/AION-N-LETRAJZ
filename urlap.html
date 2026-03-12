@@ -2,14 +2,15 @@
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
-    <title>Aion Labor - Önéletrajz Generátor</title>
+    <title>Aion Labor - Önéletrajz Generátor & Letöltő</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
         .container { max-width: 500px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin: auto; }
         h2 { color: #007bb5; text-align: center; }
         input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: #007bb5; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        button { width: 100%; padding: 15px; background: #007bb5; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 10px; }
         button:hover { background: #005f8d; }
+        .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #777; }
     </style>
 </head>
 <body>
@@ -21,13 +22,13 @@
         <input type="email" id="email" placeholder="E-mail cím">
         <textarea id="bemutat" placeholder="Rövid bemutatkozás" rows="3"></textarea>
         <textarea id="tapasztalat" placeholder="Munkatapasztalat" rows="5"></textarea>
-        <textarea id="keszseg" placeholder="Készségek (vesszővel elválasztva)" rows="2"></textarea>
-        <button onclick="generalas()">Önéletrajz Generálása</button>
+        <textarea id="keszseg" placeholder="Készségek" rows="2"></textarea>
+        <button onclick="generalas()">Önéletrajz Megnyitása</button>
+        <div class="footer">A megnyíló ablakban használd a böngésző "Nyomtatás -> Mentés PDF-ként" funkcióját!</div>
     </div>
 
     <script>
         function generalas() {
-            // Adatok kiszedése az űrlapból
             const adatok = {
                 nev: document.getElementById('nev').value,
                 cim: document.getElementById('cim').value,
@@ -38,26 +39,37 @@
                 kesz: document.getElementById('keszseg').value
             };
 
-            // A dizájn összeállítása (Nóra stílusa alapján)
             const htmlTartalom = `
                 <html>
-                <body style="font-family: Arial; display: flex; margin: 0; min-height: 100vh;">
-                    <div style="background-color: #007bb5; color: white; width: 30%; padding: 20px;">
+                <head>
+                    <title>Oneletrajz_${adatok.nev}</title>
+                    <style>
+                        @media print { .no-print { display: none; } }
+                        body { font-family: Arial; display: flex; margin: 0; min-height: 100vh; }
+                        .sidebar { background-color: #007bb5; color: white; width: 30%; padding: 20px; }
+                        .main { width: 70%; padding: 40px; background: white; }
+                        h3 { color: #007bb5; border-bottom: 2px solid #007bb5; margin-top: 20px; }
+                        .sidebar h3 { color: white; border-bottom: 1px solid white; }
+                        .no-print { position: fixed; top: 10px; right: 10px; padding: 10px 20px; background: #ff4757; color: white; border: none; border-radius: 5px; cursor: pointer; }
+                    </style>
+                </head>
+                <body>
+                    <button class="no-print" onclick="window.print()">MENTÉS PDF-KÉNT</button>
+                    <div class="sidebar">
                         <h3>KÉSZSÉGEK</h3><p>${adatok.kesz}</p>
                         <h3>ELÉRHETŐSÉG</h3><p>${adatok.cim}<br>${adatok.tel}<br>${adatok.email}</p>
                     </div>
-                    <div style="width: 70%; padding: 40px; background: white;">
+                    <div class="main">
                         <h1>${adatok.nev}</h1>
-                        <h3 style="color: #007bb5; border-bottom: 2px solid #007bb5;">BEMUTATKOZÁS</h3>
+                        <h3>BEMUTATKOZÁS</h3>
                         <p>${adatok.bemutat}</p>
-                        <h3 style="color: #007bb5; border-bottom: 2px solid #007bb5;">MUNKATAPASZTALAT</h3>
+                        <h3>MUNKATAPASZTALAT</h3>
                         <p>${adatok.tapa}</p>
                     </div>
                 </body>
                 </html>
             `;
 
-            // Új ablak nyitása a kész önéletrajzzal
             const ujAblak = window.open();
             ujAblak.document.write(htmlTartalom);
         }
