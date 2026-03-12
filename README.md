@@ -1,2 +1,2 @@
-# AION-N-LETRAJZ.py
-Önéletrajz sablon
+# AIONENELETRAJZ
+Önéletrajz sablon.py
