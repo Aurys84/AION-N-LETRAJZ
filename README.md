@@ -1,2 +1,2 @@
-# AION-N-LETRAJZ
+# AION-N-LETRAJZ.py
 Önéletrajz sablon
