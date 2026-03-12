@@ -1,4 +1,37 @@
-import webbrowser
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Aion Labor - Önéletrajz Generátor</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+        .container { max-width: 500px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin: auto; }
+        h2 { color: #007bb5; text-align: center; }
+        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
+        button { width: 100%; padding: 10px; background: #007bb5; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #005f8d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Aion Mátrix Űrlap</h2>
+        <input type="text" id="nev" placeholder="Teljes név">
+        <input type="text" id="cim" placeholder="Lakcím">
+        <input type="text" id="tel" placeholder="Telefonszám">
+        <input type="email" id="email" placeholder="E-mail cím">
+        <textarea id="bemutat" placeholder="Rövid bemutatkozás"></textarea>
+        <textarea id="tapasztalat" placeholder="Munkatapasztalat"></textarea>
+        <button onclick="generalas()">Önéletrajz Megtekintése</button>
+    </div>
+
+    <script>
+        function generalas() {
+            alert('Huncutka, az adatok készen állnak az Aion-Mátrixban! Hamarosan nyílik a kész lap...');
+            // Itt jön majd a következő lépés, ha ez már stabilan megy!
+        }
+    </script>
+</body>
+</html>import webbrowser
 import os
 
 # Aion Labor - Interaktív Önéletrajz Generátor
