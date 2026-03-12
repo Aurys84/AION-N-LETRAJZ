@@ -1,55 +1,66 @@
-# Aion Labor - Önéletrajz Generátor Sablon
-def generalj_oneletrajzot():
-    print("--- Aion Labor Önéletrajz Készítő ---")
+import webbrowser
+import os
+
+# Aion Labor - Interaktív Önéletrajz Generátor
+def generalj_es_nyisd_meg():
+    print("--- Aion Mátrix Önéletrajz-űrlap ---")
     
-    # 1. Adatgyűjtés (mint az űrlapnál)
+    # Adatbekérés (űrlap módra)
     nev = input("Teljes név: ")
     cim = input("Lakcím: ")
     tel = input("Telefonszám: ")
     email = input("E-mail cím: ")
     bemutatkozas = input("Rövid bemutatkozás: ")
     tapasztalat = input("Munkatapasztalat (pl. Cég, dátum, pozíció): ")
+    tanulmanyok = input("Tanulmányok (iskola, szak): ")
     keszsegek = input("Készségek (vesszővel elválasztva): ")
 
-    # 2. A dizájn sablon (HTML/CSS), ami hasonlít a képeidre
+    # A dizájn (Nóra és Iringó stílusa alapján)
     html_tartalom = f"""
     <!DOCTYPE html>
-    <html>
+    <html lang="hu">
     <head>
-    <style>
-        body {{ font-family: Arial, sans-serif; display: flex; margin: 0; }}
-        .oldalsav {{ background-color: #00a8cc; color: white; width: 30%; padding: 20px; min-height: 100vh; }}
-        .fo-tartalom {{ width: 70%; padding: 40px; }}
-        h1 {{ margin-top: 0; text-transform: uppercase; }}
-        .szekcio {{ margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }}
-    </style>
+        <meta charset="UTF-8">
+        <style>
+            body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; margin: 0; color: #333; }}
+            .oldalsav {{ background-color: #007bb5; color: white; width: 30%; padding: 30px; min-height: 100vh; }}
+            .fo-tartalom {{ width: 70%; padding: 50px; background-color: #f9f9f9; }}
+            h1 {{ font-size: 40px; margin-bottom: 5px; color: #222; text-transform: uppercase; }}
+            h2 {{ border-bottom: 2px solid #fff; padding-bottom: 5px; font-size: 18px; }}
+            .szekcio-cim {{ color: #007bb5; border-bottom: 2px solid #007bb5; padding-bottom: 5px; margin-top: 30px; }}
+            p {{ line-height: 1.6; }}
+        </style>
     </head>
     <body>
         <div class="oldalsav">
             <h2>KÉSZSÉGEK</h2>
             <p>{keszsegek}</p>
             <h2>ELÉRHETŐSÉG</h2>
-            <p>{cim}<br>{tel}<br>{email}</p>
+            <p>📍 {cim}<br>📞 {tel}<br>✉️ {email}</p>
         </div>
         <div class="fo-tartalom">
             <h1>{nev}</h1>
-            <div class="szekcio">
-                <h3>BEMUTATKOZÁS</h3>
-                <p>{bemutatkozas}</p>
-            </div>
-            <div class="szekcio">
-                <h3>MUNKATAPASZTALAT</h3>
-                <p>{tapasztalat}</p>
-            </div>
+            <h3 class="szekcio-cim">BEMUTATKOZÁS</h3>
+            <p>{bemutatkozas}</p>
+            <h3 class="szekcio-cim">MUNKATAPASZTALAT</h3>
+            <p>{tapasztalat}</p>
+            <h3 class="szekcio-cim">TANULMÁNYOK</h3>
+            <p>{tanulmanyok}</p>
         </div>
     </body>
     </html>
     """
 
-    # 3. Mentés fájlba
-    with open("oneletrajz.html", "w", encoding="utf-8") as f:
+    fajlnev = "Aion_Oneletrajz.html"
+    with open(fajlnev, "w", encoding="utf-8") as f:
         f.write(html_tartalom)
     
-    print("\nKész! Az 'oneletrajz.html' fájl elkészült a mappádban.")
+    # Ez a rész nyitja meg neked automatikusan!
+    eleresi_ut = os.path.abspath(fajlnev)
+    print(f"\n✅ Kész! A fájl mentve: {eleresi_ut}")
+    print(f"🔗 Nyisd meg itt: file://{eleresi_ut}")
+    
+    webbrowser.open("file://" + eleresi_ut)
 
-generalj_oneletrajzot()
+if __name__ == "__main__":
+    generalj_es_nyisd_meg()
