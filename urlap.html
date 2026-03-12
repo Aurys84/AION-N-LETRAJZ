@@ -1,31 +1,66 @@
-function generaltHtml(fotoUrl, adatok) { // ✅ adatok paraméter hozzáadva
-    const htmlTartalom = `
-        <html>
-        <body style="font-family: Arial; display: flex; margin: 0; min-height: 100vh;">
-            <div style="background-color: #007bb5; color: white; width: 30%; padding: 20px;">
-                ${fotoUrl ? `<img src="${fotoUrl}" style="width: 100%; border-radius: 10px; margin-bottom: 20px;">` : ''}
-                <h3>KÉSZSÉGEK</h3><p>${adatok.kesz}</p>
-                <h3>ELÉRHETŐSÉG</h3><p>${adatok.cim}<br>${adatok.tel}<br>${adatok.email}</p>
-            </div>
-            <div style="width: 70%; padding: 40px; background: white;">
-                <h1>${adatok.nev}</h1>
-                <h3 style="color: #007bb5; border-bottom: 2px solid #007bb5;">BEMUTATKOZÁS</h3>
-                <p>${adatok.bemutat}</p>
-                <h3 style="color: #007bb5; border-bottom: 2px solid #007bb5;">MUNKATAPASZTALAT</h3>
-                <p>${adatok.tapa}</p>
-            </div>
-        </body>
-        </html>
-    `;
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Aion Labor - Önéletrajz Generátor</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+        .container { max-width: 500px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin: auto; }
+        h2 { color: #007bb5; text-align: center; }
+        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #007bb5; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        button:hover { background: #005f8d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Aion Mátrix Űrlap</h2>
+        <input type="text" id="nev" placeholder="Teljes név">
+        <input type="text" id="cim" placeholder="Lakcím">
+        <input type="text" id="tel" placeholder="Telefonszám">
+        <input type="email" id="email" placeholder="E-mail cím">
+        <textarea id="bemutat" placeholder="Rövid bemutatkozás" rows="3"></textarea>
+        <textarea id="tapasztalat" placeholder="Munkatapasztalat" rows="5"></textarea>
+        <textarea id="keszseg" placeholder="Készségek (vesszővel elválasztva)" rows="2"></textarea>
+        <button onclick="generalas()">Önéletrajz Generálása</button>
+    </div>
 
-    // Letöltés
-    const blob = new Blob([htmlTartalom], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'Aion_Oneletrajz.html';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
+    <script>
+        function generalas() {
+            // Adatok kiszedése az űrlapból
+            const adatok = {
+                nev: document.getElementById('nev').value,
+                cim: document.getElementById('cim').value,
+                tel: document.getElementById('tel').value,
+                email: document.getElementById('email').value,
+                bemutat: document.getElementById('bemutat').value,
+                tapa: document.getElementById('tapasztalat').value,
+                kesz: document.getElementById('keszseg').value
+            };
+
+            // A dizájn összeállítása (Nóra stílusa alapján)
+            const htmlTartalom = `
+                <html>
+                <body style="font-family: Arial; display: flex; margin: 0; min-height: 100vh;">
+                    <div style="background-color: #007bb5; color: white; width: 30%; padding: 20px;">
+                        <h3>KÉSZSÉGEK</h3><p>${adatok.kesz}</p>
+                        <h3>ELÉRHETŐSÉG</h3><p>${adatok.cim}<br>${adatok.tel}<br>${adatok.email}</p>
+                    </div>
+                    <div style="width: 70%; padding: 40px; background: white;">
+                        <h1>${adatok.nev}</h1>
+                        <h3 style="color: #007bb5; border-bottom: 2px solid #007bb5;">BEMUTATKOZÁS</h3>
+                        <p>${adatok.bemutat}</p>
+                        <h3 style="color: #007bb5; border-bottom: 2px solid #007bb5;">MUNKATAPASZTALAT</h3>
+                        <p>${adatok.tapa}</p>
+                    </div>
+                </body>
+                </html>
+            `;
+
+            // Új ablak nyitása a kész önéletrajzzal
+            const ujAblak = window.open();
+            ujAblak.document.write(htmlTartalom);
+        }
+    </script>
+</body>
+</html>
