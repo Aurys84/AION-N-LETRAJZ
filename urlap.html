@@ -1,128 +1,58 @@
-<!DOCTYPE html>
-<html lang="hu">
-<head>
-    <meta charset="UTF-8">
-    <title>Aion Labor - Önéletrajz Generátor</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
-        .container { max-width: 500px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin: auto; }
-        h2 { color: #007bb5; text-align: center; }
-        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: #007bb5; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; }
-        button:hover { background: #005f8d; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Aion Mátrix Űrlap</h2>
-        <input type="text" id="nev" placeholder="Teljes név">
-        <input type="text" id="cim" placeholder="Lakcím">
-        <input type="text" id="tel" placeholder="Telefonszám">
-        <input type="email" id="email" placeholder="E-mail cím">
-        <textarea id="bemutat" placeholder="Rövid bemutatkozás" rows="3"></textarea>
-        <textarea id="tapasztalat" placeholder="Munkatapasztalat" rows="5"></textarea>
-        <textarea id="keszseg" placeholder="Készségek (vesszővel elválasztva)" rows="2"></textarea>
-        <button onclick="generalas()">Önéletrajz Generálása</button>
-    </div>
+function generalas() {
+    // Adatok kiszedése
+    const adatok = {
+        nev: document.getElementById('nev').value,
+        cim: document.getElementById('cim').value,
+        tel: document.getElementById('tel').value,
+        email: document.getElementById('email').value,
+        bemutat: document.getElementById('bemutat').value,
+        tapa: document.getElementById('tapasztalat').value,
+        kesz: document.getElementById('keszseg').value
+    };
 
-    <script>
-        function generalas() {
-            // Adatok kiszedése az űrlapból
-            const adatok = {
-                nev: document.getElementById('nev').value,
-                cim: document.getElementById('cim').value,
-                tel: document.getElementById('tel').value,
-                email: document.getElementById('email').value,
-                bemutat: document.getElementById('bemutat').value,
-                tapa: document.getElementById('tapasztalat').value,
-                kesz: document.getElementById('keszseg').value
-            };
+    const fotoInput = document.getElementById('foto');
+    let fotoUrl = '';
 
-            // A dizájn összeállítása (Nóra stílusa alapján)
-            const htmlTartalom = `
-                <html>
-                <body style="font-family: Arial; display: flex; margin: 0; min-height: 100vh;">
-                    <div style="background-color: #007bb5; color: white; width: 30%; padding: 20px;">
-                        <h3>KÉSZSÉGEK</h3><p>${adatok.kesz}</p>
-                        <h3>ELÉRHETŐSÉG</h3><p>${adatok.cim}<br>${adatok.tel}<br>${adatok.email}</p>
-                    </div>
-                    <div style="width: 70%; padding: 40px; background: white;">
-                        <h1>${adatok.nev}</h1>
-                        <h3 style="color: #007bb5; border-bottom: 2px solid #007bb5;">BEMUTATKOZÁS</h3>
-                        <p>${adatok.bemutat}</p>
-                        <h3 style="color: #007bb5; border-bottom: 2px solid #007bb5;">MUNKATAPASZTALAT</h3>
-                        <p>${adatok.tapa}</p>
-                    </div>
-                </body>
-                </html>
-            `;
+    if (fotoInput.files && fotoInput.files) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            fotoUrl = e.target.result;
+            generaltHtml(fotoUrl);
+        };
+        reader.readAsDataURL(fotoInput.files);
+    } else {
+        generaltHtml('');
+    }
+}
 
-            // Új ablak nyitása a kész önéletrajzzal
-            const ujAblak = window.open();
-            ujAblak.document.write(htmlTartalom);
-        }
-    </script>
-</body>
-</html># Aion Labor - Interaktív Önéletrajz Generátor
-def generalj_es_nyisd_meg():
-    print("--- Aion Mátrix Önéletrajz-űrlap ---")
-    
-    # Adatbekérés (űrlap módra)
-    nev = input("Teljes név: ")
-    cim = input("Lakcím: ")
-    tel = input("Telefonszám: ")
-    email = input("E-mail cím: ")
-    bemutatkozas = input("Rövid bemutatkozás: ")
-    tapasztalat = input("Munkatapasztalat (pl. Cég, dátum, pozíció): ")
-    tanulmanyok = input("Tanulmányok (iskola, szak): ")
-    keszsegek = input("Készségek (vesszővel elválasztva): ")
+function generaltHtml(fotoUrl) {
+    const htmlTartalom = `
+        <html>
+        <body style="font-family: Arial; display: flex; margin: 0; min-height: 100vh;">
+            <div style="background-color: #007bb5; color: white; width: 30%; padding: 20px;">
+                ${fotoUrl ? `<img src="${fotoUrl}" style="width: 100%; border-radius: 10px; margin-bottom: 20px;">` : ''}
+                <h3>KÉSZSÉGEK</h3><p>${adatok.kesz}</p>
+                <h3>ELÉRHETŐSÉG</h3><p>${adatok.cim}<br>${adatok.tel}<br>${adatok.email}</p>
+            </div>
+            <div style="width: 70%; padding: 40px; background: white;">
+                <h1>${adatok.nev}</h1>
+                <h3 style="color: #007bb5; border-bottom: 2px solid #007bb5;">BEMUTATKOZÁS</h3>
+                <p>${adatok.bemutat}</p>
+                <h3 style="color: #007bb5; border-bottom: 2px solid #007bb5;">MUNKATAPASZTALAT</h3>
+                <p>${adatok.tapa}</p>
+            </div>
+        </body>
+        </html>
+    `;
 
-    # A dizájn (Nóra és Iringó stílusa alapján)
-    html_tartalom = f"""
-    <!DOCTYPE html>
-    <html lang="hu">
-    <head>
-        <meta charset="UTF-8">
-        <style>
-            body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; margin: 0; color: #333; }}
-            .oldalsav {{ background-color: #007bb5; color: white; width: 30%; padding: 30px; min-height: 100vh; }}
-            .fo-tartalom {{ width: 70%; padding: 50px; background-color: #f9f9f9; }}
-            h1 {{ font-size: 40px; margin-bottom: 5px; color: #222; text-transform: uppercase; }}
-            h2 {{ border-bottom: 2px solid #fff; padding-bottom: 5px; font-size: 18px; }}
-            .szekcio-cim {{ color: #007bb5; border-bottom: 2px solid #007bb5; padding-bottom: 5px; margin-top: 30px; }}
-            p {{ line-height: 1.6; }}
-        </style>
-    </head>
-    <body>
-        <div class="oldalsav">
-            <h2>KÉSZSÉGEK</h2>
-            <p>{keszsegek}</p>
-            <h2>ELÉRHETŐSÉG</h2>
-            <p>📍 {cim}<br>📞 {tel}<br>✉️ {email}</p>
-        </div>
-        <div class="fo-tartalom">
-            <h1>{nev}</h1>
-            <h3 class="szekcio-cim">BEMUTATKOZÁS</h3>
-            <p>{bemutatkozas}</p>
-            <h3 class="szekcio-cim">MUNKATAPASZTALAT</h3>
-            <p>{tapasztalat}</p>
-            <h3 class="szekcio-cim">TANULMÁNYOK</h3>
-            <p>{tanulmanyok}</p>
-        </div>
-    </body>
-    </html>
-    """
-
-    fajlnev = "Aion_Oneletrajz.html"
-    with open(fajlnev, "w", encoding="utf-8") as f:
-        f.write(html_tartalom)
-    
-    # Ez a rész nyitja meg neked automatikusan!
-    eleresi_ut = os.path.abspath(fajlnev)
-    print(f"\n✅ Kész! A fájl mentve: {eleresi_ut}")
-    print(f"🔗 Nyisd meg itt: file://{eleresi_ut}")
-    
-    webbrowser.open("file://" + eleresi_ut)
-
-if __name__ == "__main__":
-    generalj_es_nyisd_meg()
+    // Letöltés
+    const blob = new Blob([htmlTartalom], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Aion_Oneletrajz.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
