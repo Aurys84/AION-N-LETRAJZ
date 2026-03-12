@@ -11,54 +11,35 @@
         input, textarea { width: 100%; padding: 10px; margin: 5px 0 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
         button { width: 100%; padding: 15px; background: #007bb5; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 15px; }
         button:hover { background: #005f8d; }
-        .info { font-size: 12px; color: #888; text-align: center; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Aion Mátrix - Profi Önéletrajz</h2>
-        
-        <label>Profilkép feltöltése</label>
+        <h2>Aion Mátrix - Önéletrajz</h2>
+        <label>Profilkép</label>
         <input type="file" id="foto" accept="image/*">
-
-        <label>Teljes név</label>
-        <input type="text" id="nev" placeholder="Kovács János">
-        
-        <label>Elérhetőségek</label>
+        <label>Név</label>
+        <input type="text" id="nev" placeholder="Teljes név">
+        <label>Adatok</label>
         <input type="text" id="cim" placeholder="Lakcím">
-        <input type="text" id="tel" placeholder="Telefonszám">
-        <input type="email" id="email" placeholder="E-mail">
-
-        <label>Bemutatkozás</label>
-        <textarea id="bemutat" rows="3"></textarea>
-        
-        <label>Tanulmányok</label>
-        <textarea id="suli" rows="3"></textarea>
-        
-        <label>Munkatapasztalat</label>
-        <textarea id="tapa" rows="4"></textarea>
-        
-        <label>Készségek</label>
-        <input type="text" id="kesz">
-
-        <button onclick="generalas()">ÖNÉLETRAJZ GENERÁLÁSA</button>
-        <p class="info">Ha nem nyílik meg, engedélyezd a felugró ablakokat a böngészőben!</p>
+        <input type="text" id="tel" placeholder="Telefon">
+        <input type="email" id="email" placeholder="Email">
+        <label>Szöveges részek</label>
+        <textarea id="bemutat" placeholder="Bemutatkozás" rows="3"></textarea>
+        <textarea id="suli" placeholder="Tanulmányok" rows="3"></textarea>
+        <textarea id="tapa" placeholder="Tapasztalat" rows="4"></textarea>
+        <input type="text" id="kesz" placeholder="Készségek">
+        <button onclick="generalas()">GENERÁLÁS</button>
     </div>
 
     <script>
         function generalas() {
             const fotoInput = document.getElementById('foto');
-            let fotoUrl = "";
-
             if (fotoInput.files && fotoInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    megjelenit(e.target.result);
-                };
+                reader.onload = function(e) { megjelenit(e.target.result); };
                 reader.readAsDataURL(fotoInput.files[0]);
-            } else {
-                megjelenit("");
-            }
+            } else { megjelenit(""); }
         }
 
         function megjelenit(fotoData) {
@@ -79,19 +60,20 @@
                     <style>
                         @media print { .no-print { display: none; } }
                         body { font-family: sans-serif; display: flex; margin: 0; min-height: 100vh; }
-                        .sidebar { background: #007bb5; color: white; width: 30%; padding: 25px; text-align: center; }
-                        .main { width: 70%; padding: 40px; }
-                        .profil-kep { width: 150px; height: 150px; border-radius: 50%; border: 4px solid white; object-fit: cover; margin-bottom: 20px; background: #eee; }
-                        h3 { border-bottom: 2px solid #007bb5; color: #007bb5; padding-bottom: 5px; }
-                        .sidebar h3 { color: white; border-bottom-color: white; }
+                        /* EZ A KÉK CSÍK RÉSZ: */
+                        .sidebar { background: #007bb5 !important; color: white !important; width: 30%; padding: 25px; text-align: center; -webkit-print-color-adjust: exact; }
+                        .main { width: 70%; padding: 40px; background: white; }
+                        .profil-kep { width: 120px; height: 120px; border-radius: 50%; border: 3px solid white; object-fit: cover; margin-bottom: 20px; background: #eee; }
+                        h3 { border-bottom: 2px solid #007bb5; color: #007bb5; padding-bottom: 5px; text-transform: uppercase; }
+                        .sidebar h3 { color: white !important; border-bottom: 1px solid white !important; }
                         p { white-space: pre-line; line-height: 1.5; }
-                        .no-print { position: fixed; top: 20px; right: 20px; padding: 15px; background: #ff4757; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+                        .no-print { position: fixed; top: 10px; right: 10px; padding: 10px; background: #ff4757; color: white; border: none; border-radius: 5px; cursor: pointer; z-index: 100; }
                     </style>
                 </head>
                 <body>
-                    <button class="no-print" onclick="window.print()">NYOMTATÁS / MENTÉS PDF</button>
+                    <button class="no-print" onclick="window.print()">MENTÉS PDF</button>
                     <div class="sidebar">
-                        ${fotoData ? `<img src="${fotoData}" class="profil-kep">` : '<div class="profil-kep" style="display:flex;align-items:center;justify-content:center;color:#999">Nincs kép</div>'}
+                        ${fotoData ? `<img src="${fotoData}" class="profil-kep">` : '<div class="profil-kep"></div>'}
                         <h3>ELÉRHETŐSÉG</h3>
                         <p>${adatok.cim}<br>${adatok.tel}<br>${adatok.email}</p>
                         <h3>KÉSZSÉGEK</h3>
@@ -108,10 +90,11 @@
             `;
 
             const ujAblak = window.open();
-            if (!ujAblak) {
-                alert("Huncutka! A böngésződ blokkolta a lapot. Kérlek, engedélyezd a felugró ablakokat a címsor jobb szélén!");
-            } else {
+            if (ujAblak) {
                 ujAblak.document.write(htmlTartalom);
+                ujAblak.document.close();
+            } else {
+                alert("Huncutka, engedélyezd a felugró ablakokat a Brave-ben!");
             }
         }
     </script>
