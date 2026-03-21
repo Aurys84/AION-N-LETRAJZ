@@ -1,3 +1,4 @@
+![1000007753](https://github.com/user-attachments/assets/cab1f550-f352-4bda-9108-211ea3da05c4)
 ## Aion Önéletrajz sablon
 
 ## A sablon, Csonka Norbert szellemi tulajda
