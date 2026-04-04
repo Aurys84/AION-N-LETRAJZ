@@ -8,14 +8,25 @@
         .container { max-width: 600px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1); margin: auto; }
         h2 { color: #007bb5; text-align: center; }
         label { font-weight: bold; font-size: 14px; color: #555; display: block; margin-top: 10px; }
-        input, textarea { width: 100%; padding: 10px; margin: 5px 0 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        input, textarea, select { width: 100%; padding: 10px; margin: 5px 0 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
         button { width: 100%; padding: 15px; background: #007bb5; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 15px; }
         button:hover { background: #005f8d; }
+        .color-preview { height: 20px; border-radius: 3px; margin-top: 5px; display: none; }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Aion Mátrix - Önéletrajz</h2>
+        
+        <label>Válassz stílust (színt):</label>
+        <select id="szinvalaszto">
+            <option value="#007bb5">Eredeti Mátrix Kék (Profi)</option>
+            <option value="#C19A6B">Halványbarna (Megbízható)</option>
+            <option value="#DCAE96">Selymes Púder (Elegáns)</option>
+            <option value="#4a4a4a">Modern Antracit (Semleges)</option>
+            <option value="#1a3a5a">Éjfélkék (Pasis/Erős)</option>
+        </select>
+
         <label>Profilkép</label>
         <input type="file" id="foto" accept="image/*">
         <label>Név</label>
@@ -35,14 +46,16 @@
     <script>
         function generalas() {
             const fotoInput = document.getElementById('foto');
+            const kivalasztottSzin = document.getElementById('szinvalaszto').value;
+
             if (fotoInput.files && fotoInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) { megjelenit(e.target.result); };
+                reader.onload = function(e) { megjelenit(e.target.result, kivalasztottSzin); };
                 reader.readAsDataURL(fotoInput.files[0]);
-            } else { megjelenit(""); }
+            } else { megjelenit("", kivalasztottSzin); }
         }
 
-        function megjelenit(fotoData) {
+        function megjelenit(fotoData, szin) {
             const adatok = {
                 nev: document.getElementById('nev').value,
                 cim: document.getElementById('cim').value,
@@ -60,11 +73,11 @@
                     <style>
                         @media print { .no-print { display: none; } }
                         body { font-family: sans-serif; display: flex; margin: 0; min-height: 100vh; }
-                        /* EZ A KÉK CSÍK RÉSZ: */
-                        .sidebar { background: #007bb5 !important; color: white !important; width: 30%; padding: 25px; text-align: center; -webkit-print-color-adjust: exact; }
+                        /* DINAMIKUS SZÍN ITT: */
+                        .sidebar { background: ${szin} !important; color: white !important; width: 30%; padding: 25px; text-align: center; -webkit-print-color-adjust: exact; }
                         .main { width: 70%; padding: 40px; background: white; }
                         .profil-kep { width: 120px; height: 120px; border-radius: 50%; border: 3px solid white; object-fit: cover; margin-bottom: 20px; background: #eee; }
-                        h3 { border-bottom: 2px solid #007bb5; color: #007bb5; padding-bottom: 5px; text-transform: uppercase; }
+                        h3 { border-bottom: 2px solid ${szin}; color: ${szin}; padding-bottom: 5px; text-transform: uppercase; }
                         .sidebar h3 { color: white !important; border-bottom: 1px solid white !important; }
                         p { white-space: pre-line; line-height: 1.5; }
                         .no-print { position: fixed; top: 10px; right: 10px; padding: 10px; background: #ff4757; color: white; border: none; border-radius: 5px; cursor: pointer; z-index: 100; }
