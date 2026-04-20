@@ -7,18 +7,23 @@
         body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
         .container { max-width: 600px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1); margin: auto; }
         h2 { color: #007bb5; text-align: center; margin-bottom: 5px; }
-        .ats-info { background: #eef7ff; border-left: 5px solid #007bb5; padding: 15px; margin-bottom: 20px; font-size: 13px; color: #333; line-height: 1.4; }
+        
+        /* ATS Tájékoztató - Visszatéve! */
+        .ats-info { background: #eef7ff; border-left: 5px solid #007bb5; padding: 15px; margin-bottom: 20px; font-size: 13px; color: #333; line-height: 1.4; border-radius: 0 8px 8px 0; }
         .ats-info h4 { margin: 0 0 8px 0; color: #007bb5; text-transform: uppercase; font-size: 14px; }
+        .ats-info ul { margin: 5px 0; padding-left: 20px; }
+
         label { font-weight: bold; font-size: 14px; color: #555; display: block; margin-top: 10px; }
         input, textarea, select { width: 100%; padding: 10px; margin: 5px 0 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
         
-        /* Színes Nyelvválasztók */
-        .lang-select { display: flex; gap: 10px; margin-top: 10px; }
-        .btn-lang { flex: 1; padding: 10px; border: none; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; transition: 0.3s; opacity: 0.6; }
-        .btn-lang.active { opacity: 1; transform: scale(1.05); border: 2px solid #333; }
-        .btn-en { background: #3c6382; } /* Angol kék */
-        .btn-de { background: #fa983a; } /* Német narancs */
-        .btn-hu { background: #78e08f; } /* Magyar zöld */
+        /* Színes Nyelvválasztó Gombok */
+        .lang-select { display: flex; gap: 10px; margin-top: 10px; margin-bottom: 20px; }
+        .btn-lang { flex: 1; padding: 12px; border: none; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; transition: 0.3s; }
+        .btn-hu { background: #2ecc71; } /* Zöld */
+        .btn-en { background: #3498db; } /* Kék */
+        .btn-de { background: #e67e22; } /* Narancs */
+        .btn-lang:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        .btn-lang.active { outline: 3px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 
         .gen-btn { width: 100%; padding: 15px; background: #007bb5; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 20px; }
         .gen-btn:hover { background: #005f8d; }
@@ -30,11 +35,128 @@
         <p style="text-align: center; font-size: 12px; color: #888; margin-bottom: 20px;">Csonka Norbert & Aion Labor fejlesztés</p>
 
         <div class="ats-info">
-            <h4>🚀 ATS Tippek:</h4>
-            <p>Töltse ki magyarul. A generált PDF-en a választott nyelv is meg fog jelenni az eredeti alatt!</p>
+            <h4>🚀 Robot-biztos (ATS) Tippek:</h4>
+            <ul>
+                <li><strong>Kulcsszavak:</strong> Használja a hirdetésben lévő szavakat pontosan!</li>
+                <li><strong>Szoftverek:</strong> Nevezze meg konkrétan (pl. SAP, Excel, AutoCAD).</li>
+                <li><strong>Számok:</strong> Írjon mérhető eredményeket (pl. "napi 200 vendég").</li>
+                <li><strong>Fordítás:</strong> A választott célnyelv a generált PDF-en jelenik meg.</li>
+            </ul>
         </div>
 
-        <label>Célnyelv a PDF-hez (Válassz színt!):</label>
+        <label>Válasszon célnyelvet a PDF-hez:</label>
+        <div class="lang-select">
+            <button class="btn-lang btn-hu active" onclick="setLang('hu', this)">MAGYAR</button>
+            <button class="btn-lang btn-en" onclick="setLang('en', this)">HU + ANGOL</button>
+            <button class="btn-lang btn-de" onclick="setLang('de', this)">HU + NÉMET</button>
+        </div>
+        
+        <label>Válasszon stílust:</label>
+        <select id="szinvalaszto">
+            <option value="#007bb5">Eredeti Mátrix Kék</option>
+            <option value="#1a3a5a">Éjfélkék</option>
+            <option value="#4a4a4a">Antracit</option>
+            <option value="#C19A6B">Halványbarna</option>
+        </select>
+
+        <label>Profilkép feltöltése</label>
+        <input type="file" id="foto" accept="image/*">
+        <label>Személyes adatok</label>
+        <input type="text" id="nev" placeholder="Teljes név">
+        <input type="text" id="cim" placeholder="Lakcím">
+        <input type="text" id="tel" placeholder="Telefonszám">
+        <input type="email" id="email" placeholder="E-mail cím">
+        
+        <label>Szakmai bemutatkozás</label>
+        <textarea id="bemutat" placeholder="Írja meg magyarul..." rows="3"></textarea>
+        <label>Tanulmányok</label>
+        <textarea id="suli" placeholder="Iskolák és végzettségek..." rows="3"></textarea>
+        <label>Tapasztalat</label>
+        <textarea id="tapa" placeholder="Munkahelyek és feladatok..." rows="4"></textarea>
+        <label>Készségek</label>
+        <input type="text" id="kesz" placeholder="Szoftverek, nyelvtudás, készségek">
+        
+        <button class="gen-btn" onclick="generalas()">GENERÁLÁS ÉS ELLENŐRZÉS</button>
+    </div>
+
+    <script>
+        let targetLang = 'hu';
+
+        function setLang(lang, btn) {
+            targetLang = lang;
+            document.querySelectorAll('.btn-lang').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        async function translateText(text, lang) {
+            if (lang === 'hu' || !text) return "";
+            try {
+                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=hu|${lang}`);
+                const data = await res.json();
+                return data.responseData.translatedText;
+            } catch (e) { return ""; }
+        }
+
+        async function generalas() {
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.innerText = "FELDOLGOZÁS...";
+            
+            const adatok = {
+                nev: document.getElementById('nev').value,
+                cim: document.getElementById('cim').value,
+                tel: document.getElementById('tel').value,
+                email: document.getElementById('email').value,
+                bemutat: document.getElementById('bemutat').value,
+                suli: document.getElementById('suli').value,
+                tapa: document.getElementById('tapa').value,
+                kesz: document.getElementById('kesz').value,
+                bemutat_tr: await translateText(document.getElementById('bemutat').value, targetLang),
+                suli_tr: await translateText(document.getElementById('suli').value, targetLang),
+                tapa_tr: await translateText(document.getElementById('tapa').value, targetLang),
+                kesz_tr: await translateText(document.getElementById('kesz').value, targetLang)
+            };
+
+            const fotoInput = document.getElementById('foto');
+            const szin = document.getElementById('szinvalaszto').value;
+            
+            if (fotoInput.files && fotoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) { megjelenit(e.target.result, szin, adatok); };
+                reader.readAsDataURL(fotoInput.files[0]);
+            } else { megjelenit("", szin, adatok); }
+            
+            btn.innerText = originalText;
+        }
+
+        function megjelenit(fotoData, szin, adatok) {
+            const html = `
+                <html>
+                <head>
+                    <style>
+                        @media print { .no-print { display: none; } }
+                        body { font-family: sans-serif; display: flex; margin: 0; min-height: 100vh; }
+                        .sidebar { background: ${szin}; color: white; width: 32%; padding: 30px; -webkit-print-color-adjust: exact; }
+                        .main { width: 68%; padding: 45px; }
+                        .profil-kep { width: 120px; height: 120px; border-radius: 50%; border: 3px solid white; object-fit: cover; }
+                        h3 { border-bottom: 2px solid ${szin}; color: ${szin}; text-transform: uppercase; margin-top: 25px; }
+                        .sidebar h3 { color: white; border-bottom: 1px solid white; }
+                        p { white-space: pre-line; line-height: 1.4; font-size: 14px; margin-bottom: 5px; }
+                        .tr-text { color: #777; font-style: italic; font-size: 13px; display: block; margin-bottom: 15px; }
+                        .sidebar .tr-text { color: #ccc; }
+                        .no-print { position: fixed; top: 10px; right: 10px; padding: 12px; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; }
+                    </style>
+                </head>
+                <body>
+                    <button class="no-print" onclick="window.print()">📄 PDF MENTÉSE</button>
+                    <div class="sidebar">
+                        ${fotoData ? `<img src="${fotoData}" class="profil-kep">` : ''}
+                        <h3>ADATOK</h3>
+                        <p>${adatok.cim}<br>${adatok.tel}<br>${adatok.email}</p>
+                        ${adatok.kesz ? `<h3>KÉSZSÉGEK</h3><p>${adatok.kesz}</p>${adatok.kesz_tr ? `<span class="tr-text">[${adatok.kesz_tr}]</span>` : ''}` : ''}
+                    </div>
+                    <div class="main">
+                        <h1 style="color        <label>Célnyelv a PDF-hez (Válassz színt!):</label>
         <div class="lang-select">
             <button class="btn-lang btn-hu active" onclick="setLang('hu', this)">Csak Magyar</button>
             <button class="btn-lang btn-en" onclick="setLang('en', this)">Magyar + Angol</button>
