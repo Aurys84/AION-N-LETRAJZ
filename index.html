@@ -2,7 +2,7 @@
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
-    <title>Aion Mátrix - Profi Önéletrajz</title>
+    <title>Aion Labor - Profi Önéletrajz</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; padding: 20px; margin: 0; }
         .container { max-width: 650px; background: white; padding: 35px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin: auto; }
@@ -36,7 +36,7 @@
             </ul>
         </div>
 
-        <label>Célnyelv a PDF-hez:</label>
+        <label>Válasszon célnyelvet a PDF-hez:</label>
         <div class="lang-select">
             <button class="btn-lang btn-hu active" onclick="setLang('hu', this)">MAGYAR</button>
             <button class="btn-lang btn-en" onclick="setLang('en', this)">HU + ANGOL</button>
@@ -54,10 +54,10 @@
         <label>Profilkép feltöltése</label>
         <input type="file" id="foto" accept="image/*">
         <label>Személyes adatok</label>
-        <input type="text" id="nev" placeholder="Név">
-        <input type="text" id="cim" placeholder="Cím">
-        <input type="text" id="tel" placeholder="Telefon">
-        <input type="email" id="email" placeholder="Email">
+        <input type="text" id="nev" placeholder="Teljes név">
+        <input type="text" id="cim" placeholder="Lakcím">
+        <input type="text" id="tel" placeholder="Telefonszám">
+        <input type="email" id="email" placeholder="E-mail cím">
         
         <label>Szakmai bemutatkozás</label>
         <textarea id="bemutat" placeholder="Írja meg magyarul..." rows="3"></textarea>
@@ -121,6 +121,7 @@
     </script>
 </body>
 </html>
+
    
         
 
