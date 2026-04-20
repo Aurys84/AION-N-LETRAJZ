@@ -14,6 +14,8 @@
         input, textarea, select { width: 100%; padding: 10px; margin: 5px 0 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
         button { width: 100%; padding: 15px; background: #007bb5; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 15px; }
         button:hover { background: #005f8d; }
+        .lang-btn { width: 48%; display: inline-block; background: #2ed573; margin-bottom: 10px; }
+        .lang-btn.de { background: #ffa502; }
     </style>
 </head>
 <body>
@@ -30,6 +32,10 @@
                 <li><strong>Tisztaság:</strong> Ez a sablon tiszta kód, a robotok imádni fogják!</li>
             </ul>
         </div>
+        
+        <label>Fordítás (Egyszeri kattintás a kitöltés után):</label>
+        <button class="lang-btn" onclick="translateAll('en')">🇺🇸 English</button>
+        <button class="lang-btn de" onclick="translateAll('de')">🇩🇪 Deutsch</button>
         
         <label>Válassz stílust (színt):</label>
         <select id="szinvalaszto">
@@ -57,6 +63,21 @@
     </div>
 
     <script>
+        // --- AION FORDÍTÓ MOTOR (MyMemory API) ---
+        async function translateAll(lang) {
+            const fields = ['bemutat', 'suli', 'tapa', 'kesz'];
+            for (let id of fields) {
+                const element = document.getElementById(id);
+                if (element.value.trim() !== "") {
+                    element.placeholder = "Fordítás folyamatban...";
+                    const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(element.value)}&langpair=hu|${lang}`);
+                    const data = await response.json();
+                    element.value = data.responseData.translatedText;
+                }
+            }
+            alert("Aion: Fordítás kész, nindzsám! Ellenőrizd a mezőket.");
+        }
+
         function generalas() {
             const fotoInput = document.getElementById('foto');
             const kivalasztottSzin = document.getElementById('szinvalaszto').value;
@@ -103,14 +124,13 @@
                         ${fotoData ? `<img src="${fotoData}" class="profil-kep">` : '<div class="profil-kep" style="display:none"></div>'}
                         <h3>ELÉRHETŐSÉG</h3>
                         <p>${adatok.cim}<br>${adatok.tel}<br>${adatok.email}</p>
-                        <h3>KÉSZSÉGEK</h3>
-                        <p>${adatok.kesz}</p>
+                        ${adatok.kesz ? `<h3>KÉSZSÉGEK</h3><p>${adatok.kesz}</p>` : ''}
                     </div>
                     <div class="main">
                         <h1>${adatok.nev}</h1>
-                        <h3>BEMUTATKOZÁS</h3><p>${adatok.bemutat}</p>
-                        <h3>TANULMÁNYOK</h3><p>${adatok.suli}</p>
-                        <h3>MUNKATAPASZTALAT</h3><p>${adatok.tapa}</p>
+                        ${adatok.bemutat ? `<h3>BEMUTATKOZÁS</h3><p>${adatok.bemutat}</p>` : ''}
+                        ${adatok.suli ? `<h3>TANULMÁNYOK</h3><p>${adatok.suli}</p>` : ''}
+                        ${adatok.tapa ? `<h3>MUNKATAPASZTALAT</h3><p>${adatok.tapa}</p>` : ''}
                         <div style="margin-top: 50px; font-size: 10px; color: #ccc; text-align: right;">Generálva: Aion Mátrix Labor</div>
                     </div>
                 </body>
@@ -122,7 +142,7 @@
                 ujAblak.document.write(htmlTartalom);
                 ujAblak.document.close();
             } else {
-                alert("Huncutka, engedélyezd a felugró ablakokat a Brave-ben!");
+                alert("Huncutka, engedélyezd a felugró ablakokat!");
             }
         }
     </script>
