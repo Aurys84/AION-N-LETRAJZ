@@ -2,39 +2,182 @@
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
-    <title>Aion Labor - Profi Önéletrajz</title>
+    <title>Aion Mátrix - Profi Önéletrajz</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
-        .container { max-width: 600px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1); margin: auto; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; padding: 20px; margin: 0; }
+        .container { max-width: 650px; background: white; padding: 35px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin: auto; }
         h2 { color: #007bb5; text-align: center; margin-bottom: 5px; }
         
-        /* ATS Tájékoztató - Visszatéve! */
-        .ats-info { background: #eef7ff; border-left: 5px solid #007bb5; padding: 15px; margin-bottom: 20px; font-size: 13px; color: #333; line-height: 1.4; border-radius: 0 8px 8px 0; }
+        /* ATS Tájékoztató szekció */
+        .ats-info { background: #eef7ff; border-left: 5px solid #007bb5; padding: 15px; margin-bottom: 25px; font-size: 13px; color: #333; line-height: 1.4; border-radius: 0 8px 8px 0; }
         .ats-info h4 { margin: 0 0 8px 0; color: #007bb5; text-transform: uppercase; font-size: 14px; }
         .ats-info ul { margin: 5px 0; padding-left: 20px; }
 
-        label { font-weight: bold; font-size: 14px; color: #555; display: block; margin-top: 10px; }
-        input, textarea, select { width: 100%; padding: 10px; margin: 5px 0 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        label { font-weight: bold; font-size: 14px; color: #555; display: block; margin-top: 15px; }
+        input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
         
         /* Színes Nyelvválasztó Gombok */
-        .lang-select { display: flex; gap: 10px; margin-top: 10px; margin-bottom: 20px; }
-        .btn-lang { flex: 1; padding: 12px; border: none; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; transition: 0.3s; }
+        .lang-select { display: flex; gap: 10px; margin: 15px 0 25px 0; }
+        .btn-lang { flex: 1; padding: 12px; border: none; border-radius: 6px; cursor: pointer; color: white; font-weight: bold; transition: 0.3s; font-size: 13px; }
         .btn-hu { background: #2ecc71; } /* Zöld */
         .btn-en { background: #3498db; } /* Kék */
         .btn-de { background: #e67e22; } /* Narancs */
         .btn-lang:hover { filter: brightness(1.1); transform: translateY(-2px); }
         .btn-lang.active { outline: 3px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 
-        .gen-btn { width: 100%; padding: 15px; background: #007bb5; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 20px; }
-        .gen-btn:hover { background: #005f8d; }
+        .gen-btn { width: 100%; padding: 18px; background: #007bb5; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 17px; font-weight: bold; margin-top: 25px; transition: 0.3s; }
+        .gen-btn:hover { background: #005f8d; box-shadow: 0 4px 12px rgba(0, 123, 181, 0.3); }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Aion Mátrix - Önéletrajz</h2>
-        <p style="text-align: center; font-size: 12px; color: #888; margin-bottom: 20px;">Csonka Norbert & Aion Labor fejlesztés</p>
+        <p style="text-align: center; font-size: 12px; color: #888; margin-bottom: 25px;">Csonka Norbert & Aion Labor fejlesztés</p>
 
         <div class="ats-info">
+            <h4>🚀 Robot-biztos (ATS) Tippek:</h4>
+            <ul>
+                <li><strong>Kulcsszavak:</strong> Használja a hirdetésben lévő szavakat pontosan!</li>
+                <li><strong>Szoftverek:</strong> Nevezze meg konkrétan (pl. SAP, Excel, AutoCAD).</li>
+                <li><strong>Számok:</strong> Írjon mérhető eredményeket (pl. "napi 200 vendég").</li>
+                <li><strong>Fordítás:</strong> A választott célnyelv a PDF-en jelenik meg az eredeti alatt.</li>
+            </ul>
+        </div>
+
+        <label>Válasszon célnyelvet a PDF-hez:</label>
+        <div class="lang-select">
+            <button class="btn-lang btn-hu active" onclick="setLang('hu', this)">MAGYAR</button>
+            <button class="btn-lang btn-en" onclick="setLang('en', this)">HU + ANGOL</button>
+            <button class="btn-lang btn-de" onclick="setLang('de', this)">HU + NÉMET</button>
+        </div>
+        
+        <label>Válasszon stílust:</label>
+        <select id="szinvalaszto">
+            <option value="#007bb5">Eredeti Mátrix Kék</option>
+            <option value="#1a3a5a">Éjfélkék</option>
+            <option value="#4a4a4a">Antracit</option>
+            <option value="#C19A6B">Halványbarna</option>
+        </select>
+
+        <label>Profilkép feltöltése</label>
+        <input type="file" id="foto" accept="image/*">
+
+        <label>Személyes adatok</label>
+        <input type="text" id="nev" placeholder="Teljes név">
+        <input type="text" id="cim" placeholder="Lakcím">
+        <input type="text" id="tel" placeholder="Telefonszám">
+        <input type="email" id="email" placeholder="E-mail cím">
+        
+        <label>Szakmai bemutatkozás</label>
+        <textarea id="bemutat" placeholder="Rövid bemutatkozás..." rows="3"></textarea>
+        
+        <label>Tanulmányok</label>
+        <textarea id="suli" placeholder="Végzettségek..." rows="3"></textarea>
+        
+        <label>Tapasztalat</label>
+        <textarea id="tapa" placeholder="Korábbi munkahelyek..." rows="4"></textarea>
+        
+        <label>Készségek</label>
+        <input type="text" id="kesz" placeholder="Szoftverek, nyelvek, készségek">
+        
+        <button class="gen-btn" onclick="generalas()">PDF GENERÁLÁSA ÉS ELLENŐRZÉSE</button>
+    </div>
+
+    <script>
+        let targetLang = 'hu';
+
+        function setLang(lang, btn) {
+            targetLang = lang;
+            document.querySelectorAll('.btn-lang').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        async function translateText(text, lang) {
+            if (lang === 'hu' || !text) return "";
+            try {
+                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=hu|${lang}`);
+                const data = await res.json();
+                return data.responseData.translatedText;
+            } catch (e) { return ""; }
+        }
+
+        async function generalas() {
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.innerText = "FELDOLGOZÁS ÉS FORDÍTÁS...";
+            btn.disabled = true;
+            
+            const adatok = {
+                nev: document.getElementById('nev').value,
+                cim: document.getElementById('cim').value,
+                tel: document.getElementById('tel').value,
+                email: document.getElementById('email').value,
+                bemutat: document.getElementById('bemutat').value,
+                suli: document.getElementById('suli').value,
+                tapa: document.getElementById('tapa').value,
+                kesz: document.getElementById('kesz').value,
+                bemutat_tr: await translateText(document.getElementById('bemutat').value, targetLang),
+                suli_tr: await translateText(document.getElementById('suli').value, targetLang),
+                tapa_tr: await translateText(document.getElementById('tapa').value, targetLang),
+                kesz_tr: await translateText(document.getElementById('kesz').value, targetLang)
+            };
+
+            const fotoInput = document.getElementById('foto');
+            const szin = document.getElementById('szinvalaszto').value;
+            
+            if (fotoInput.files && fotoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) { megjelenit(e.target.result, szin, adatok); };
+                reader.readAsDataURL(fotoInput.files[0]);
+            } else { megjelenit("", szin, adatok); }
+            
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
+
+        function megjelenit(fotoData, szin, adatok) {
+            const html = `
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <style>
+                        @media print { .no-print { display: none; } }
+                        body { font-family: sans-serif; display: flex; margin: 0; min-height: 100vh; }
+                        .sidebar { background: ${szin}; color: white; width: 32%; padding: 30px; -webkit-print-color-adjust: exact; }
+                        .main { width: 68%; padding: 45px; }
+                        .profil-kep { width: 120px; height: 120px; border-radius: 50%; border: 3px solid white; object-fit: cover; margin-bottom: 20px; }
+                        h3 { border-bottom: 2px solid ${szin}; color: ${szin}; text-transform: uppercase; margin-top: 25px; font-size: 16px; }
+                        .sidebar h3 { color: white; border-bottom: 1px solid rgba(255,255,255,0.5); }
+                        p { white-space: pre-line; line-height: 1.5; font-size: 14px; margin-bottom: 10px; }
+                        .tr-text { color: #777; font-style: italic; font-size: 13px; display: block; margin-bottom: 15px; }
+                        .sidebar .tr-text { color: #ccc; }
+                        .no-print { position: fixed; top: 10px; right: 10px; padding: 12px 20px; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 6px; font-weight: bold; }
+                    </style>
+                </head>
+                <body>
+                    <button class="no-print" onclick="window.print()">📄 PDF MENTÉSE</button>
+                    <div class="sidebar">
+                        ${fotoData ? `<img src="${fotoData}" class="profil-kep">` : ''}
+                        <h3>ADATOK</h3>
+                        <p>${adatok.cim}<br>${adatok.tel}<br>${adatok.email}</p>
+                        ${adatok.kesz ? `<h3>KÉSZSÉGEK</h3><p>${adatok.kesz}</p>${adatok.kesz_tr ? `<span class="tr-text">[${adatok.kesz_tr}]</span>` : ''}` : ''}
+                    </div>
+                    <div class="main">
+                        <h1 style="color:${szin}; margin:0;">${adatok.nev}</h1>
+                        ${adatok.bemutat ? `<h3>PROFIL</h3><p>${adatok.bemutat}</p>${adatok.bemutat_tr ? `<span class="tr-text">[${adatok.bemutat_tr}]</span>` : ''}` : ''}
+                        ${adatok.suli ? `<h3>TANULMÁNYOK</h3><p>${adatok.suli}</p>${adatok.suli_tr ? `<span class="tr-text">[${adatok.suli_tr}]</span>` : ''}` : ''}
+                        ${adatok.tapa ? `<h3>TAPASZTALAT</h3><p>${adatok.tapa}</p>${adatok.tapa_tr ? `<span class="tr-text">[${adatok.tapa_tr}]</span>` : ''}` : ''}
+                    </div>
+                </body>
+                </html>
+            `;
+            const win = window.open();
+            win.document.write(html);
+            win.document.close();
+        }
+    </script>
+</body>
+</html>        <div class="ats-info">
             <h4>🚀 Robot-biztos (ATS) Tippek:</h4>
             <ul>
                 <li><strong>Kulcsszavak:</strong> Használja a hirdetésben lévő szavakat pontosan!</li>
