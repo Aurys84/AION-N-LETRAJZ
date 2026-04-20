@@ -147,4 +147,117 @@
         }
     </script>
 </body>
+</html>        <button class="lang-btn" onclick="translateAll('en')">🇺🇸 English</button>
+        <button class="lang-btn de" onclick="translateAll('de')">🇩🇪 Deutsch</button>
+        
+        <label>Válassz stílust (színt):</label>
+        <select id="szinvalaszto">
+            <option value="#007bb5">Eredeti Mátrix Kék (Profi)</option>
+            <option value="#C19A6B">Halványbarna (Megbízható)</option>
+            <option value="#DCAE96">Selymes Púder (Elegáns)</option>
+            <option value="#4a4a4a">Modern Antracit (Semleges)</option>
+            <option value="#1a3a5a">Éjfélkék (Pasis/Erős)</option>
+        </select>
+
+        <label>Profilkép</label>
+        <input type="file" id="foto" accept="image/*">
+        <label>Név</label>
+        <input type="text" id="nev" placeholder="Teljes név">
+        <label>Adatok</label>
+        <input type="text" id="cim" placeholder="Lakcím">
+        <input type="text" id="tel" placeholder="Telefon">
+        <input type="email" id="email" placeholder="Email">
+        <label>Szöveges részek</label>
+        <textarea id="bemutat" placeholder="Bemutatkozás (Használj szakmai kulcsszavakat!)" rows="3"></textarea>
+        <textarea id="suli" placeholder="Tanulmányok" rows="3"></textarea>
+        <textarea id="tapa" placeholder="Tapasztalat (Ide írd az elért eredményeket számokkal!)" rows="4"></textarea>
+        <input type="text" id="kesz" placeholder="Készségek és specifikus szoftverek">
+        <button onclick="generalas()">GENERÁLÁS ÉS ELLENŐRZÉS</button>
+    </div>
+
+    <script>
+        // --- AION FORDÍTÓ MOTOR (MyMemory API) ---
+        async function translateAll(lang) {
+            const fields = ['bemutat', 'suli', 'tapa', 'kesz'];
+            for (let id of fields) {
+                const element = document.getElementById(id);
+                if (element.value.trim() !== "") {
+                    element.placeholder = "Fordítás folyamatban...";
+                    const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(element.value)}&langpair=hu|${lang}`);
+                    const data = await response.json();
+                    element.value = data.responseData.translatedText;
+                }
+            }
+            alert("Aion: Fordítás kész, nindzsám! Ellenőrizd a mezőket.");
+        }
+
+        function generalas() {
+            const fotoInput = document.getElementById('foto');
+            const kivalasztottSzin = document.getElementById('szinvalaszto').value;
+
+            if (fotoInput.files && fotoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) { megjelenit(e.target.result, kivalasztottSzin); };
+                reader.readAsDataURL(fotoInput.files[0]);
+            } else { megjelenit("", kivalasztottSzin); }
+        }
+
+        function megjelenit(fotoData, szin) {
+            const adatok = {
+                nev: document.getElementById('nev').value,
+                cim: document.getElementById('cim').value,
+                tel: document.getElementById('tel').value,
+                email: document.getElementById('email').value,
+                bemutat: document.getElementById('bemutat').value,
+                suli: document.getElementById('suli').value,
+                tapa: document.getElementById('tapa').value,
+                kesz: document.getElementById('kesz').value
+            };
+
+            const htmlTartalom = `
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <style>
+                        @media print { .no-print { display: none; } }
+                        body { font-family: sans-serif; display: flex; margin: 0; min-height: 100vh; color: #333; }
+                        .sidebar { background: ${szin} !important; color: white !important; width: 30%; padding: 25px; text-align: center; -webkit-print-color-adjust: exact; }
+                        .main { width: 70%; padding: 40px; background: white; }
+                        .profil-kep { width: 120px; height: 120px; border-radius: 50%; border: 3px solid white; object-fit: cover; margin-bottom: 20px; background: #eee; }
+                        h3 { border-bottom: 2px solid ${szin}; color: ${szin}; padding-bottom: 5px; text-transform: uppercase; margin-top: 25px; }
+                        .sidebar h3 { color: white !important; border-bottom: 1px solid white !important; }
+                        p { white-space: pre-line; line-height: 1.5; font-size: 14px; }
+                        h1 { margin: 0; color: ${szin}; text-transform: uppercase; letter-spacing: 1px; }
+                        .no-print { position: fixed; top: 10px; right: 10px; padding: 12px 20px; background: #2ed573; color: white; border: none; border-radius: 5px; cursor: pointer; z-index: 100; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+                    </style>
+                </head>
+                <body>
+                    <button class="no-print" onclick="window.print()">📄 PDF MENTÉSE</button>
+                    <div class="sidebar">
+                        ${fotoData ? `<img src="${fotoData}" class="profil-kep">` : '<div class="profil-kep" style="display:none"></div>'}
+                        <h3>ELÉRHETŐSÉG</h3>
+                        <p>${adatok.cim}<br>${adatok.tel}<br>${adatok.email}</p>
+                        ${adatok.kesz ? `<h3>KÉSZSÉGEK</h3><p>${adatok.kesz}</p>` : ''}
+                    </div>
+                    <div class="main">
+                        <h1>${adatok.nev}</h1>
+                        ${adatok.bemutat ? `<h3>BEMUTATKOZÁS</h3><p>${adatok.bemutat}</p>` : ''}
+                        ${adatok.suli ? `<h3>TANULMÁNYOK</h3><p>${adatok.suli}</p>` : ''}
+                        ${adatok.tapa ? `<h3>MUNKATAPASZTALAT</h3><p>${adatok.tapa}</p>` : ''}
+                        <div style="margin-top: 50px; font-size: 10px; color: #ccc; text-align: right;">Generálva: Aion Mátrix Labor</div>
+                    </div>
+                </body>
+                </html>
+            `;
+
+            const ujAblak = window.open();
+            if (ujAblak) {
+                ujAblak.document.write(htmlTartalom);
+                ujAblak.document.close();
+            } else {
+                alert("Huncutka, engedélyezd a felugró ablakokat!");
+            }
+        }
+    </script>
+</body>
 </html>
