@@ -6,17 +6,30 @@
     <style>
         body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
         .container { max-width: 600px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1); margin: auto; }
-        h2 { color: #007bb5; text-align: center; }
+        h2 { color: #007bb5; text-align: center; margin-bottom: 5px; }
+        .ats-info { background: #eef7ff; border-left: 5px solid #007bb5; padding: 15px; margin-bottom: 20px; font-size: 13px; color: #333; line-height: 1.4; }
+        .ats-info h4 { margin: 0 0 8px 0; color: #007bb5; text-transform: uppercase; font-size: 14px; }
+        .ats-info ul { margin: 5px 0; padding-left: 20px; }
         label { font-weight: bold; font-size: 14px; color: #555; display: block; margin-top: 10px; }
         input, textarea, select { width: 100%; padding: 10px; margin: 5px 0 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
         button { width: 100%; padding: 15px; background: #007bb5; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 15px; }
         button:hover { background: #005f8d; }
-        .color-preview { height: 20px; border-radius: 3px; margin-top: 5px; display: none; }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Aion Mátrix - Önéletrajz</h2>
+        <p style="text-align: center; font-size: 12px; color: #888; margin-bottom: 20px;">Csonka Norbert & Aion Labor szellemi terméke</p>
+
+        <div class="ats-info">
+            <h4>🚀 Robot-biztos (ATS) Tippek:</h4>
+            <ul>
+                <li><strong>Kulcsszavak:</strong> Használd a hirdetésben lévő szavakat pontosan!</li>
+                <li><strong>Szoftverek:</strong> Nevezd meg konkrétan (pl. SAP, Excel, Predor).</li>
+                <li><strong>Számok:</strong> Írj mérhető eredményeket (pl. "napi 200 vendég").</li>
+                <li><strong>Tisztaság:</strong> Ez a sablon tiszta kód, a robotok imádni fogják!</li>
+            </ul>
+        </div>
         
         <label>Válassz stílust (színt):</label>
         <select id="szinvalaszto">
@@ -36,11 +49,11 @@
         <input type="text" id="tel" placeholder="Telefon">
         <input type="email" id="email" placeholder="Email">
         <label>Szöveges részek</label>
-        <textarea id="bemutat" placeholder="Bemutatkozás" rows="3"></textarea>
+        <textarea id="bemutat" placeholder="Bemutatkozás (Használj szakmai kulcsszavakat!)" rows="3"></textarea>
         <textarea id="suli" placeholder="Tanulmányok" rows="3"></textarea>
-        <textarea id="tapa" placeholder="Tapasztalat" rows="4"></textarea>
-        <input type="text" id="kesz" placeholder="Készségek">
-        <button onclick="generalas()">GENERÁLÁS</button>
+        <textarea id="tapa" placeholder="Tapasztalat (Ide írd az elért eredményeket számokkal!)" rows="4"></textarea>
+        <input type="text" id="kesz" placeholder="Készségek és specifikus szoftverek">
+        <button onclick="generalas()">GENERÁLÁS ÉS ELLENŐRZÉS</button>
     </div>
 
     <script>
@@ -70,23 +83,24 @@
             const htmlTartalom = `
                 <html>
                 <head>
+                    <meta charset="UTF-8">
                     <style>
                         @media print { .no-print { display: none; } }
-                        body { font-family: sans-serif; display: flex; margin: 0; min-height: 100vh; }
-                        /* DINAMIKUS SZÍN ITT: */
+                        body { font-family: sans-serif; display: flex; margin: 0; min-height: 100vh; color: #333; }
                         .sidebar { background: ${szin} !important; color: white !important; width: 30%; padding: 25px; text-align: center; -webkit-print-color-adjust: exact; }
                         .main { width: 70%; padding: 40px; background: white; }
                         .profil-kep { width: 120px; height: 120px; border-radius: 50%; border: 3px solid white; object-fit: cover; margin-bottom: 20px; background: #eee; }
-                        h3 { border-bottom: 2px solid ${szin}; color: ${szin}; padding-bottom: 5px; text-transform: uppercase; }
+                        h3 { border-bottom: 2px solid ${szin}; color: ${szin}; padding-bottom: 5px; text-transform: uppercase; margin-top: 25px; }
                         .sidebar h3 { color: white !important; border-bottom: 1px solid white !important; }
-                        p { white-space: pre-line; line-height: 1.5; }
-                        .no-print { position: fixed; top: 10px; right: 10px; padding: 10px; background: #ff4757; color: white; border: none; border-radius: 5px; cursor: pointer; z-index: 100; }
+                        p { white-space: pre-line; line-height: 1.5; font-size: 14px; }
+                        h1 { margin: 0; color: ${szin}; text-transform: uppercase; letter-spacing: 1px; }
+                        .no-print { position: fixed; top: 10px; right: 10px; padding: 12px 20px; background: #2ed573; color: white; border: none; border-radius: 5px; cursor: pointer; z-index: 100; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
                     </style>
                 </head>
                 <body>
-                    <button class="no-print" onclick="window.print()">MENTÉS PDF</button>
+                    <button class="no-print" onclick="window.print()">📄 PDF MENTÉSE</button>
                     <div class="sidebar">
-                        ${fotoData ? `<img src="${fotoData}" class="profil-kep">` : '<div class="profil-kep"></div>'}
+                        ${fotoData ? `<img src="${fotoData}" class="profil-kep">` : '<div class="profil-kep" style="display:none"></div>'}
                         <h3>ELÉRHETŐSÉG</h3>
                         <p>${adatok.cim}<br>${adatok.tel}<br>${adatok.email}</p>
                         <h3>KÉSZSÉGEK</h3>
@@ -97,6 +111,7 @@
                         <h3>BEMUTATKOZÁS</h3><p>${adatok.bemutat}</p>
                         <h3>TANULMÁNYOK</h3><p>${adatok.suli}</p>
                         <h3>MUNKATAPASZTALAT</h3><p>${adatok.tapa}</p>
+                        <div style="margin-top: 50px; font-size: 10px; color: #ccc; text-align: right;">Generálva: Aion Mátrix Labor</div>
                     </div>
                 </body>
                 </html>
