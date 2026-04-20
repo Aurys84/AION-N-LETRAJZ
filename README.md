@@ -11,6 +11,7 @@ Szoftverek és Eszközök: Ne csak annyit írj, hogy „értek a géphez”. Nev
 Mérhető Eredmények: Az algoritmus imádja a számokat. „Pultos voltam” helyett írd: „Napi 200+ vendég kiszolgálása, 100%-os higiéniai megfelelés”.
 ---
 Szakmai Titulusok: Használj iparági standard megnevezéseket. Ha a cégnél „mindenes” voltál, de valójában Raktárvezetői feladatokat láttál el, használd a hivatalos titulust.
+---
 ## A sablon, Csonka Norbert szellemi tulajda
 Tervezés Mesterséges intelligencia támogatásával történt
 ---
