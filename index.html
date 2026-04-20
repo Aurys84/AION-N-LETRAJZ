@@ -12,7 +12,6 @@
         label { font-weight: bold; font-size: 14px; color: #555; display: block; margin-top: 15px; }
         input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
         
-        /* Bővített Nyelvválasztó */
         .lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 25px; }
         .btn-lang { padding: 10px; border: none; border-radius: 6px; cursor: pointer; color: white; font-weight: bold; transition: 0.3s; font-size: 12px; }
         .btn-hu { background: #2ecc71; grid-column: span 2; }
@@ -31,8 +30,8 @@
         <div class="ats-info">
             <h4>🚀 Robot-biztos (ATS) Tippek:</h4>
             <ul>
-                <li><strong>Kétnyelvű:</strong> A választott nyelv a magyar alatt jelenik meg.</li>
-                <li><strong>Csak Angol/Német:</strong> A PDF-en a magyar szöveg eltűnik, csak a fordítás marad.</li>
+                <li><strong>Csak Angol/Német:</strong> A címszavak (Profil, Tapasztalat stb.) is lefordulnak.</li>
+                <li><strong>Kétnyelvű:</strong> Minden címszó két nyelven jelenik meg.</li>
             </ul>
         </div>
 
@@ -52,7 +51,7 @@
             <option value="#4a4a4a">Antracit</option>
         </select>
 
-        <label>Személyes adatok (Magyarul töltsd ki!)</label>
+        <label>Személyes adatok</label>
         <input type="text" id="nev" placeholder="Név">
         <input type="text" id="cim" placeholder="Cím">
         <input type="text" id="tel" placeholder="Telefon">
@@ -68,6 +67,12 @@
 
     <script>
         let mode = 'hu';
+        const dictionary = {
+            hu: { contact: "ELÉRHETŐSÉG", skills: "KÉSZSÉGEK", profile: "PROFIL", edu: "TANULMÁNYOK", exp: "TAPASZTALAT" },
+            en: { contact: "CONTACT", skills: "SKILLS", profile: "PROFILE", edu: "EDUCATION", exp: "EXPERIENCE" },
+            de: { contact: "KONTAKT", skills: "FÄHIGKEITEN", profile: "PROFIL", edu: "BILDUNG", exp: "ERFAHRUNG" }
+        };
+
         function setMode(m, btn) {
             mode = m;
             document.querySelectorAll('.btn-lang').forEach(b => b.classList.remove('active'));
@@ -103,42 +108,47 @@
                 kes_tr: await translate(document.getElementById('kesz').value, lang)
             };
 
-            const szin = document.getElementById('szinvalaszto').value;
-            megjelenit(szin, data, mode);
+            megjelenit(document.getElementById('szinvalaszto').value, data, mode);
             btn.innerText = "PDF GENERÁLÁSA";
         }
 
         function megjelenit(szin, d, m) {
             const isOnly = m.includes('only');
+            const lang = m.split('-')[0];
+            const dict = dictionary[lang];
+            const huDict = dictionary['hu'];
+
+            const getLabel = (key) => {
+                if (m === 'hu') return huDict[key];
+                if (isOnly) return dict[key];
+                return `${huDict[key]} / ${dict[key]}`;
+            };
+
             const html = `<html><head><style>
-                body { font-family: sans-serif; display: flex; margin: 0; }
+                body { font-family: sans-serif; display: flex; margin: 0; min-height: 100vh; }
                 .sidebar { background: ${szin}; color: white; width: 32%; padding: 30px; -webkit-print-color-adjust: exact; }
                 .main { width: 68%; padding: 45px; }
-                h3 { border-bottom: 2px solid ${szin}; color: ${szin}; text-transform: uppercase; margin-top: 25px; }
+                h3 { border-bottom: 2px solid ${szin}; color: ${szin}; text-transform: uppercase; margin-top: 25px; font-size: 16px; letter-spacing: 1px; }
                 .sidebar h3 { color: white; border-bottom: 1px solid rgba(255,255,255,0.5); }
-                .tr { color: #666; font-style: italic; font-size: 13px; display: block; }
+                p { white-space: pre-line; line-height: 1.5; font-size: 14px; margin-bottom: 5px; }
+                .tr { color: #666; font-style: italic; font-size: 13.5px; display: block; margin-bottom: 10px; }
                 .sidebar .tr { color: #ccc; }
-                .no-print { position: fixed; top: 10px; right: 10px; padding: 12px; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 5px; }
+                .no-print { position: fixed; top: 10px; right: 10px; padding: 12px; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; }
             </style></head><body>
                 <button class="no-print" onclick="window.print()">MENTÉS PDF</button>
                 <div class="sidebar">
-                    <h3>ADATOK</h3><p>${d.cim}<br>${d.tel}<br>${d.email}</p>
-                    ${d.kesz ? `<h3>KÉSZSÉGEK</h3><p>${!isOnly ? d.kesz : ''}</p>${d.kes_tr ? `<span class="tr">${d.kes_tr}</span>` : ''}` : ''}
+                    <h3>${getLabel('contact')}</h3><p>${d.cim}<br>${d.tel}<br>${d.email}</p>
+                    ${d.kesz ? `<h3>${getLabel('skills')}</h3><p>${!isOnly ? d.kesz : ''}</p>${d.kes_tr ? `<span class="tr">${isOnly ? '' : '[ '}${d.kes_tr}${isOnly ? '' : ' ]'}</span>` : ''}` : ''}
                 </div>
                 <div class="main">
-                    <h1 style="color:${szin}">${d.nev}</h1>
-                    ${d.bemutat ? `<h3>PROFIL</h3><p>${!isOnly ? d.bemutat : ''}</p>${d.bemutat_tr ? `<span class="tr">${d.bemutat_tr}</span>` : ''}` : ''}
-                    ${d.suli ? `<h3>TANULMÁNYOK</h3><p>${!isOnly ? d.suli : ''}</p>${d.suli_tr ? `<span class="tr">${d.suli_tr}</span>` : ''}` : ''}
-                    ${d.tapa ? `<h3>TAPASZTALAT</h3><p>${!isOnly ? d.tapa : ''}</p>${d.tapa_tr ? `<span class="tr">${d.tapa_tr}</span>` : ''}` : ''}
+                    <h1 style="color:${szin}; margin:0; text-transform: uppercase;">${d.nev}</h1>
+                    ${d.bemutat ? `<h3>${getLabel('profile')}</h3><p>${!isOnly ? d.bemutat : ''}</p>${d.bemutat_tr ? `<span class="tr">${isOnly ? '' : '[ '}${d.bemutat_tr}${isOnly ? '' : ' ]'}</span>` : ''}` : ''}
+                    ${d.suli ? `<h3>${getLabel('edu')}</h3><p>${!isOnly ? d.suli : ''}</p>${d.suli_tr ? `<span class="tr">${isOnly ? '' : '[ '}${d.suli_tr}${isOnly ? '' : ' ]'}</span>` : ''}` : ''}
+                    ${d.tapa ? `<h3>${getLabel('exp')}</h3><p>${!isOnly ? d.tapa : ''}</p>${d.tapa_tr ? `<span class="tr">${isOnly ? '' : '[ '}${d.tapa_tr}${isOnly ? '' : ' ]'}</span>` : ''}` : ''}
                 </div></body></html>`;
             const win = window.open();
-            win.document.write(html);
-            win.document.close();
+            win.document.write(html); win.document.close();
         }
     </script>
 </body>
 </html>
-   
-        
-
-  
