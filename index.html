@@ -8,46 +8,52 @@
         .container { max-width: 650px; background: white; padding: 35px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin: auto; }
         h2 { color: #007bb5; text-align: center; margin-bottom: 5px; }
         
-        /* TÁJÉKOZTATÓ FIXÁLVA */
-        .ats-info { background: #eef7ff; border-left: 5px solid #007bb5; padding: 15px; margin-bottom: 25px; font-size: 13px; color: #333; line-height: 1.4; border-radius: 0 8px 8px 0; display: block !important; }
+        /* ATS TÁJÉKOZTATÓ VISSZATÉVE */
+        .ats-info { background: #eef7ff; border-left: 5px solid #007bb5; padding: 15px; margin-bottom: 20px; font-size: 13px; color: #333; line-height: 1.4; border-radius: 0 8px 8px 0; }
         .ats-info h4 { margin: 0 0 8px 0; color: #007bb5; text-transform: uppercase; font-size: 14px; }
-        
+
         label { font-weight: bold; font-size: 14px; color: #555; display: block; margin-top: 15px; }
         input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
-        .lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 25px; }
-        .btn-lang { padding: 10px; border: none; border-radius: 6px; cursor: pointer; color: white; font-weight: bold; transition: 0.3s; font-size: 12px; }
+        
+        .lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+        .btn-lang { padding: 10px; border: none; border-radius: 6px; cursor: pointer; color: white; font-weight: bold; font-size: 12px; }
         .btn-hu { background: #2ecc71; grid-column: span 2; }
         .btn-en-mix { background: #3498db; }
         .btn-de-mix { background: #e67e22; }
         .btn-en-only { background: #1e3799; }
         .btn-de-only { background: #b33939; }
         .btn-lang.active { outline: 3px solid #333; transform: scale(0.98); }
+
         .gen-btn { width: 100%; padding: 18px; background: #007bb5; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 17px; font-weight: bold; margin-top: 25px; }
+        #kep-preview { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: none; margin: 10px auto; border: 3px solid #007bb5; }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Aion Mátrix - Önéletrajz</h2>
-        
-        <div class="ats-info" id="info-box">
+
+        <div class="ats-info">
             <h4>🚀 Robot-biztos (ATS) Tippek:</h4>
             <ul>
-                <li><strong>Cím formátum:</strong> Kérjük, így adja meg: <em>Város, Utca, Házszám</em>.</li>
-                <li><strong>Nyelv:</strong> Az "Only" módokban a név és cím is lefordul.</li>
-                <li><strong>Stílus:</strong> 10 szín közül választhat.</li>
+                <li><strong>Cím:</strong> Város, Utca, Házszám formátumban add meg a fordításhoz.</li>
+                <li><strong>Kép:</strong> A feltöltött fotó automatikusan bekerül a fejlécbe.</li>
+                <li><strong>Mód:</strong> Az "Only" módokban a cím és a név is lefordul!</li>
             </ul>
         </div>
 
-        <label>Válasszon módot:</label>
+        <label>Profilkép feltöltése:</label>
+        <input type="file" id="kep-input" accept="image/*" onchange="previewKep()">
+        <img id="kep-preview">
+
+        <label>Nyelvi mód és Design:</label>
         <div class="lang-grid">
-            <button class="btn-lang btn-hu active" onclick="setMode('hu', this)">Csak Magyar</button>
+            <button class="btn-lang btn-hu active" onclick="setMode('hu', this)">Magyar</button>
             <button class="btn-lang btn-en-mix" onclick="setMode('en-mix', this)">HU + Angol</button>
             <button class="btn-lang btn-de-mix" onclick="setMode('de-mix', this)">HU + Német</button>
             <button class="btn-lang btn-en-only" onclick="setMode('en-only', this)">Csak Angol</button>
             <button class="btn-lang btn-de-only" onclick="setMode('de-only', this)">Csak Német</button>
         </div>
         
-        <label>Design (10 szín):</label>
         <select id="szinvalaszto">
             <option value="#007bb5">Mátrix Kék</option>
             <option value="#1a3a5a">Éjfélkék</option>
@@ -61,13 +67,13 @@
             <option value="#16a085">Türkiz</option>
         </select>
 
-        <label>Személyes adatok</label>
+        <label>Személyes Adatok</label>
         <input type="text" id="nev" placeholder="Teljes Név">
-        <input type="text" id="cim" placeholder="Lakcím (Város, Utca, Házszám)">
+        <input type="text" id="cim" placeholder="Város, Utca, Házszám">
         <input type="text" id="tel" placeholder="Telefonszám">
         <input type="email" id="email" placeholder="E-mail cím">
         
-        <label>Szakmai tartalom</label>
+        <label>Tartalom</label>
         <textarea id="bemutat" placeholder="Bemutatkozás..." rows="3"></textarea>
         <textarea id="suli" placeholder="Tanulmányok..." rows="3"></textarea>
         <textarea id="tapa" placeholder="Tapasztalat..." rows="4"></textarea>
@@ -78,11 +84,19 @@
 
     <script>
         let mode = 'hu';
-        const dictionary = {
-            hu: { contact: "ADATOK", skills: "KÉSZSÉGEK", profile: "PROFIL", edu: "TANULMÁNYOK", exp: "TAPASZTALAT" },
-            en: { contact: "CONTACT", skills: "SKILLS", profile: "PROFILE", edu: "EDUCATION", exp: "EXPERIENCE" },
-            de: { contact: "KONTAKT", skills: "FÄHIGKEITEN", profile: "PROFIL", edu: "BILDUNG", exp: "ERFAHRUNG" }
-        };
+        let profilKepData = "";
+
+        function previewKep() {
+            const file = document.getElementById('kep-input').files[0];
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                profilKepData = reader.result;
+                const preview = document.getElementById('kep-preview');
+                preview.src = reader.result;
+                preview.style.display = 'block';
+            };
+            if (file) reader.readAsDataURL(file);
+        }
 
         function setMode(m, btn) {
             mode = m;
@@ -101,7 +115,7 @@
 
         async function generalas() {
             const btn = document.querySelector('.gen-btn');
-            btn.innerText = "FELDOLGOZÁS...";
+            btn.innerText = "FORDÍTÁS ÉS GENERÁLÁS...";
             const lang = mode.split('-')[0];
             
             const data = {
@@ -123,22 +137,46 @@
 
             const szin = document.getElementById('szinvalaszto').value;
             const isOnly = mode.includes('only');
-            const dict = dictionary[lang] || dictionary['hu'];
-            const huD = dictionary['hu'];
-            const getL = (k) => (mode === 'hu' ? huD[k] : (isOnly ? dict[k] : huD[k] + " / " + dict[k]));
+            const dicts = {
+                hu: { c: "ADATOK", s: "KÉSZSÉGEK", p: "PROFIL", e: "TANULMÁNYOK", ex: "TAPASZTALAT" },
+                en: { c: "CONTACT", s: "SKILLS", p: "PROFILE", e: "EDUCATION", ex: "EXPERIENCE" },
+                de: { c: "KONTAKT", s: "FÄHIGKEITEN", p: "PROFIL", e: "BILDUNG", ex: "ERFAHRUNG" }
+            };
+            const L = (k) => (mode === 'hu' ? dicts.hu[k] : (isOnly ? dicts[lang][k] : dicts.hu[k] + " / " + dicts[lang][k]));
 
             const html = `<html><head><meta charset="UTF-8"><style>
                 body { font-family: sans-serif; display: flex; margin: 0; min-height: 100vh; }
                 .sidebar { background: ${szin}; color: white; width: 32%; padding: 30px; -webkit-print-color-adjust: exact; }
                 .main { width: 68%; padding: 45px; }
+                .p-img { width: 120px; height: 120px; border-radius: 50%; border: 4px solid white; object-fit: cover; margin-bottom: 20px; }
                 h3 { border-bottom: 2px solid ${szin}; color: ${szin}; text-transform: uppercase; margin-top: 25px; font-size: 15px; }
                 .sidebar h3 { color: white; border-bottom: 1px solid rgba(255,255,255,0.3); }
-                p { white-space: pre-line; line-height: 1.5; font-size: 14px; margin-bottom: 8px; }
-                .tr { color: #666; font-style: italic; font-size: 13px; display: block; margin-top: 4px; }
+                p { white-space: pre-line; line-height: 1.5; font-size: 14px; }
+                .tr { color: #666; font-style: italic; font-size: 13px; display: block; }
                 .sidebar .tr { color: #ddd; }
-                .no-print { position: fixed; top: 10px; right: 10px; padding: 12px 20px; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; }
+                .no-print { position: fixed; top: 10px; right: 10px; padding: 12px; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; }
             </style></head><body>
-                <button class="no-print" onclick="window.print()">MENTÉS PDF-KÉNT</button>
+                <button class="no-print" onclick="window.print()">MENTÉS PDF</button>
                 <div class="sidebar">
-                    <h3>${getL('contact')}</h3>
-                    <p>${!isOnly ? data.cim : ''}${data.cim_tr && !
+                    ${profilKepData ? `<img src="${profilKepData}" class="p-img">` : ''}
+                    <h3>${L('c')}</h3>
+                    <p>${!isOnly ? data.cim : ''}${data.cim_tr && !isOnly ? '<br>' : ''}${data.cim_tr ? `<span class="tr">${data.cim_tr}</span>` : ''}</p>
+                    <p>${data.tel}<br>${data.email}</p>
+                    ${data.kesz ? `<h3>${L('s')}</h3><p>${!isOnly ? data.kesz : ''}</p>${data.kes_tr ? `<span class="tr">${data.kes_tr}</span>` : ''}` : ''}
+                </div>
+                <div class="main">
+                    <h1 style="color:${szin}; margin:0;">${!isOnly ? data.nev : data.nev_tr}</h1>
+                    ${!isOnly && data.nev_tr && data.nev !== data.nev_tr ? `<span class="tr" style="font-size: 18px;">${data.nev_tr}</span>` : ''}
+                    ${data.bemutat ? `<h3>${L('p')}</h3><p>${!isOnly ? data.bemutat : ''}</p>${data.bemutat_tr ? `<span class="tr">${data.bemutat_tr}</span>` : ''}` : ''}
+                    ${data.suli ? `<h3>${L('e')}</h3><p>${!isOnly ? data.suli : ''}</p>${data.suli_tr ? `<span class="tr">${data.suli_tr}</span>` : ''}` : ''}
+                    ${data.tapa ? `<h3>${L('ex')}</h3><p>${!isOnly ? data.tapa : ''}</p>${data.tapa_tr ? `<span class="tr">${data.tapa_tr}</span>` : ''}` : ''}
+                </div></body></html>`;
+            
+            const win = window.open("", "_blank");
+            win.document.write(html);
+            win.document.close();
+            btn.innerText = "PDF GENERÁLÁSA";
+        }
+    </script>
+</body>
+</html>
