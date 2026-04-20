@@ -2,20 +2,19 @@
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
-    <title>Aion Labor - Profi Önéletrajz</title>
+    <title>Aion Mátrix - Profi Önéletrajz</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; padding: 20px; margin: 0; }
         .container { max-width: 650px; background: white; padding: 35px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin: auto; }
         h2 { color: #007bb5; text-align: center; margin-bottom: 5px; }
         
-        .ats-info { background: #eef7ff; border-left: 5px solid #007bb5; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; display: block !important; }
-        .ats-info h4 { margin: 0 0 10px 0; color: #007bb5; text-transform: uppercase; font-size: 14px; font-weight: bold; }
+        .ats-info { background: #eef7ff; border-left: 5px solid #007bb5; padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0; display: block !important; }
+        .ats-info h4 { margin: 0 0 12px 0; color: #007bb5; text-transform: uppercase; font-size: 14px; font-weight: bold; }
         .ats-info ul { margin: 0; padding-left: 20px; list-style-type: disc !important; }
-        .ats-info li { font-size: 13px; color: #333; line-height: 1.6; margin-bottom: 5px; display: list-item !important; }
+        .ats-info li { font-size: 13px; color: #333; line-height: 1.5; margin-bottom: 10px; display: list-item !important; }
 
         label { font-weight: bold; font-size: 14px; color: #555; display: block; margin-top: 15px; }
         input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
-        
         .lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0 20px 0; }
         .btn-lang { padding: 12px; border: none; border-radius: 6px; cursor: pointer; color: white; font-weight: bold; transition: 0.3s; font-size: 13px; }
         .btn-hu { background: #2ecc71; grid-column: span 2; }
@@ -24,7 +23,6 @@
         .btn-en-only { background: #1e3799; }
         .btn-de-only { background: #b33939; }
         .btn-lang.active { outline: 3px solid #333; transform: scale(0.98); box-shadow: inset 0 2px 5px rgba(0,0,0,0.2); }
-
         .gen-btn { width: 100%; padding: 18px; background: #007bb5; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 17px; font-weight: bold; margin-top: 25px; }
         #kep-preview { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: none; margin: 10px auto; border: 3px solid #007bb5; }
     </style>
@@ -36,9 +34,10 @@
         <div class="ats-info">
             <h4>🚀 ROBOT-BIZTOS (ATS) TIPPEK:</h4>
             <ul>
-                <li><strong>Szoftverek:</strong> Konkrét neveket írj (pl. SAP, Minitab, Predor)!</li>
-                <li><strong>Mérhető eredmények:</strong> Használj számokat (pl. napi 200 vendég)!</li>
-                <li><strong>Titulusok:</strong> Használj hivatalos megnevezéseket (pl. Raktárvezető)!</li>
+                <li><strong>Szoftverek:</strong> Nevezd meg konkrétan (pl. SAP, Minitab, Predor)!</li>
+                <li><strong>Mérhető Eredmények:</strong> Használj számokat (pl. „Napi 200 vendég”).</li>
+                <li><strong>Titulusok:</strong> Használj iparági standard megnevezéseket (pl. Raktárvezető).</li>
+                <li><strong>Cím:</strong> Lakcím (Város, Utca, Házszám) formában add meg!</li>
             </ul>
         </div>
 
@@ -46,7 +45,7 @@
         <input type="file" id="kep-input" accept="image/*" onchange="previewKep()">
         <img id="kep-preview">
 
-        <label>Nyelvi mód:</label>
+        <label>Válassz nyelvi módot:</label>
         <div class="lang-grid">
             <button class="btn-lang btn-hu active" onclick="setMode('hu', this)">Csak Magyar</button>
             <button class="btn-lang btn-en-mix" onclick="setMode('en-mix', this)">HU + Angol</button>
@@ -71,7 +70,7 @@
 
         <label>Személyes adatok</label>
         <input type="text" id="nev" placeholder="Teljes Név">
-        <input type="text" id="cim" placeholder="Város, Utca, Házszám">
+        <input type="text" id="cim" placeholder="Lakcím (Város, Utca, Házszám)">
         <input type="text" id="tel" placeholder="Telefonszám">
         <input type="email" id="email" placeholder="E-mail cím">
         
@@ -87,7 +86,6 @@
     <script>
         let mode = 'hu';
         let profilKepData = "";
-
         function previewKep() {
             const file = document.getElementById('kep-input').files[0];
             const reader = new FileReader();
@@ -98,22 +96,19 @@
             };
             if (file) reader.readAsDataURL(file);
         }
-
         function setMode(m, btn) {
             mode = m;
             document.querySelectorAll('.btn-lang').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         }
-
         async function translate(text, lang) {
-            if (!text || lang === 'hu' || mode === 'hu') return ""; 
+            if (!text || mode === 'hu') return "";
             try {
                 const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=hu|${lang}`);
                 const data = await res.json();
                 return data.responseData.translatedText || "";
             } catch (e) { return ""; }
         }
-
         async function generalas() {
             const btn = document.querySelector('.gen-btn');
             btn.innerText = "FELDOLGOZÁS...";
@@ -154,12 +149,12 @@
                 .main { width: 68%; padding: 45px; background: white; }
                 .p-img { width: 120px; height: 120px; border-radius: 50%; border: 4px solid white; object-fit: cover; margin-bottom: 20px; }
                 h1 { margin:0; text-transform: uppercase; font-size: 26px; color: ${szin}; }
-                h3 { border-bottom: 2px solid ${szin}; color: ${szin}; text-transform: uppercase; margin-top: 25px; font-size: 15px; padding-bottom: 5px; }
+                h3 { border-bottom: 2px solid ${szin}; color: ${szin}; text-transform: uppercase; margin-top: 25px; font-size: 15px; }
                 .sidebar h3 { color: white; border-bottom: 1px solid rgba(255,255,255,0.3); }
                 p { white-space: pre-line; line-height: 1.6; font-size: 14px; margin: 0 0 10px 0; }
                 .tr { color: #666; font-style: italic; font-size: 13px; display: block; margin-top: -5px; margin-bottom: 10px; }
                 .sidebar .tr { color: #ddd; }
-                .no-print { position: fixed; top: 10px; right: 10px; padding: 12px 20px; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 6px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 1000; }
+                .no-print { position: fixed; top: 10px; right: 10px; padding: 12px 20px; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 6px; font-weight: bold; }
             </style></head><body>
                 <button class="no-print" onclick="window.print()">NYOMTATÁS / MENTÉS</button>
                 <div class="sidebar">
@@ -179,12 +174,8 @@
                 </div></body></html>`;
             
             const win = window.open("", "_blank");
-            if (win) {
-                win.document.write(html);
-                win.document.close();
-            } else {
-                alert("Engedélyezd a felugró ablakokat a Brave-ben!");
-            }
+            win.document.write(html);
+            win.document.close();
             btn.innerText = "PDF GENERÁLÁSA";
         }
     </script>
