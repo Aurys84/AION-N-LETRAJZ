@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <title>Aion Labor - Profi Önéletrajz Generátor</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; padding: 20px; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; padding: 20px; }
         .container { max-width: 650px; background: white; padding: 35px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin: auto; }
         h2 { color: #007bb5; text-align: center; margin-bottom: 5px; }
         .ats-info { background: #eef7ff; border-left: 5px solid #007bb5; padding: 15px; margin-bottom: 25px; font-size: 13px; color: #333; line-height: 1.4; border-radius: 0 8px 8px 0; }
         .ats-info h4 { margin: 0 0 8px 0; color: #007bb5; text-transform: uppercase; font-size: 14px; }
-        .ats-info ul { margin: 5px 0; padding-left: 20px; }
         
-        /* Fordító gombok stílusa */
         .lang-section { display: flex; gap: 10px; margin-bottom: 25px; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6; }
         .lang-btn { flex: 1; padding: 12px; border: 1px solid #007bb5; border-radius: 6px; cursor: pointer; font-weight: 600; background: white; color: #007bb5; transition: 0.3s; }
         .lang-btn:hover { background: #007bb5; color: white; }
@@ -28,13 +26,126 @@
 
         <div class="ats-info">
             <h4>🚀 Robot-biztos (ATS) Tippek:</h4>
-            <ul>
-                <li><strong>Kulcsszavak:</strong> Használja a hirdetésben szereplő szakkifejezéseket pontosan!</li>
-                <li><strong>Szoftverek:</strong> Nevezze meg konkrétan (pl. SAP, Excel, AutoCAD, Predor).</li>
-                <li><strong>Számok:</strong> Írjon mérhető eredményeket (pl. "napi 200 vendég kiszolgálása").</li>
-                <li><strong>Tisztaság:</strong> Ez a sablon tiszta kódot generál, a szoftverek imádni fogják.</li>
-            </ul>
+            <p>Töltse ki az adatokat, majd kattintson a fordításra. A rendszer a magyar szöveg alá illeszti a fordítást.</p>
         </div>
+        
+        <div class="lang-section">
+            <button class="lang-btn" onclick="translateAndAppend('en')">Fordítás alá: Angol</button>
+            <button class="lang-btn" onclick="translateAndAppend('de')">Fordítás alá: Német</button>
+        </div>
+        
+        <label>Válasszon stílust (színt):</label>
+        <select id="szinvalaszto">
+            <option value="#007bb5">Eredeti Mátrix Kék</option>
+            <option value="#1a3a5a">Éjfélkék</option>
+            <option value="#4a4a4a">Antracit</option>
+        </select>
+
+        <label>Profilkép feltöltése</label>
+        <input type="file" id="foto" accept="image/*">
+        
+        <label>Személyes adatok</label>
+        <input type="text" id="nev" placeholder="Teljes név">
+        <input type="text" id="cim" placeholder="Lakcím">
+        <input type="text" id="tel" placeholder="Telefonszám">
+        <input type="email" id="email" placeholder="E-mail cím">
+        
+        <label>Szakmai bemutatkozás</label>
+        <textarea id="bemutat" placeholder="Bemutatkozás..." rows="3"></textarea>
+        
+        <label>Tanulmányok</label>
+        <textarea id="suli" placeholder="Végzettségek..." rows="3"></textarea>
+        
+        <label>Munkatapasztalat</label>
+        <textarea id="tapa" placeholder="Tapasztalat..." rows="4"></textarea>
+        
+        <label>Készségek</label>
+        <input type="text" id="kesz" placeholder="Készségek...">
+        
+        <button class="gen-btn" onclick="generalas()">DOKUMENTUM GENERÁLÁSA</button>
+    </div>
+
+    <script>
+        async function translateAndAppend(lang) {
+            const fields = ['bemutat', 'suli', 'tapa', 'kesz'];
+            const btn = event.target;
+            btn.innerText = "Fordítás...";
+            
+            for (let id of fields) {
+                const element = document.getElementById(id);
+                const originalText = element.value.trim();
+                if (originalText !== "" && !originalText.includes("[")) { // Csak ha még nincs lefordítva
+                    try {
+                        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(originalText)}&langpair=hu|${lang}`);
+                        const data = await res.json();
+                        const translated = data.responseData.translatedText;
+                        element.value = `${originalText}\n[${translated}]`; // Aláírja a fordítást
+                    } catch (e) { console.error("Hiba!", e); }
+                }
+            }
+            btn.innerText = "Kész!";
+        }
+
+        function generalas() {
+            const fotoInput = document.getElementById('foto');
+            const szin = document.getElementById('szinvalaszto').value;
+            if (fotoInput.files && fotoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) { megjelenit(e.target.result, szin); };
+                reader.readAsDataURL(fotoInput.files[0]);
+            } else { megjelenit("", szin); }
+        }
+
+        function megjelenit(fotoData, szin) {
+            const adatok = {
+                nev: document.getElementById('nev').value,
+                cim: document.getElementById('cim').value,
+                tel: document.getElementById('tel').value,
+                email: document.getElementById('email').value,
+                bemutat: document.getElementById('bemutat').value,
+                suli: document.getElementById('suli').value,
+                tapa: document.getElementById('tapa').value,
+                kesz: document.getElementById('kesz').value
+            };
+
+            const html = `
+                <html>
+                <head>
+                    <style>
+                        @media print { .no-print { display: none; } }
+                        body { font-family: sans-serif; display: flex; margin: 0; min-height: 100vh; }
+                        .sidebar { background: ${szin}; color: white; width: 32%; padding: 30px; -webkit-print-color-adjust: exact; }
+                        .main { width: 68%; padding: 45px; }
+                        .profil-kep { width: 120px; height: 120px; border-radius: 50%; border: 3px solid white; object-fit: cover; }
+                        h3 { border-bottom: 2px solid ${szin}; color: ${szin}; text-transform: uppercase; margin-top: 25px; }
+                        .sidebar h3 { color: white; border-bottom: 1px solid white; }
+                        p { white-space: pre-line; line-height: 1.5; font-size: 14px; }
+                        .no-print { position: fixed; top: 10px; right: 10px; padding: 12px; background: #28a745; color: white; border: none; cursor: pointer; }
+                    </style>
+                </head>
+                <body>
+                    <button class="no-print" onclick="window.print()">PDF MENTÉSE</button>
+                    <div class="sidebar">
+                        ${fotoData ? `<img src="${fotoData}" class="profil-kep">` : ''}
+                        <h3>ADATOK</h3><p>${adatok.cim}<br>${adatok.tel}<br>${adatok.email}</p>
+                        ${adatok.kesz ? `<h3>KÉSZSÉGEK</h3><p>${adatok.kesz}</p>` : ''}
+                    </div>
+                    <div class="main">
+                        <h1 style="color:${szin}">${adatok.nev}</h1>
+                        ${adatok.bemutat ? `<h3>PROFIL</h3><p>${adatok.bemutat}</p>` : ''}
+                        ${adatok.suli ? `<h3>TANULMÁNYOK</h3><p>${adatok.suli}</p>` : ''}
+                        ${adatok.tapa ? `<h3>TAPASZTALAT</h3><p>${adatok.tapa}</p>` : ''}
+                    </div>
+                </body>
+                </html>
+            `;
+            const win = window.open();
+            win.document.write(html);
+            win.document.close();
+        }
+    </script>
+</body>
+</html>        </div>
         
         <div class="lang-section">
             <button class="lang-btn" onclick="translateAll('en')">Fordítás: Angol (EN)</button>
