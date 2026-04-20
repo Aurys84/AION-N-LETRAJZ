@@ -8,15 +8,16 @@
         .container { max-width: 650px; background: white; padding: 35px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin: auto; }
         h2 { color: #007bb5; text-align: center; margin-bottom: 5px; }
         
-        /* ATS TÁJÉKOZTATÓ - FIXÁLVA */
-        .ats-info { background: #eef7ff; border-left: 5px solid #007bb5; padding: 15px; margin: 20px 0; font-size: 13px; color: #333; line-height: 1.6; border-radius: 0 8px 8px 0; }
-        .ats-info h4 { margin: 0 0 10px 0; color: #007bb5; text-transform: uppercase; font-size: 14px; display: flex; align-items: center; gap: 8px; }
-        .ats-info ul { margin: 0; padding-left: 20px; }
+        /* ATS TÁJÉKOZTATÓ - MOST MÁR TÉNYLEG FIXÁLVA */
+        .ats-info { background: #eef7ff; border-left: 5px solid #007bb5; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; display: block !important; }
+        .ats-info h4 { margin: 0 0 10px 0; color: #007bb5; text-transform: uppercase; font-size: 14px; font-weight: bold; }
+        .ats-info ul { margin: 0; padding-left: 20px; list-style-type: disc !important; }
+        .ats-info li { font-size: 13px; color: #333; line-height: 1.6; margin-bottom: 5px; display: list-item !important; }
 
         label { font-weight: bold; font-size: 14px; color: #555; display: block; margin-top: 15px; }
         input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
         
-        .lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0 25px 0; }
+        .lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0 20px 0; }
         .btn-lang { padding: 12px; border: none; border-radius: 6px; cursor: pointer; color: white; font-weight: bold; transition: 0.3s; font-size: 13px; }
         .btn-hu { background: #2ecc71; grid-column: span 2; }
         .btn-en-mix { background: #3498db; }
@@ -25,8 +26,7 @@
         .btn-de-only { background: #b33939; }
         .btn-lang.active { outline: 3px solid #333; transform: scale(0.98); box-shadow: inset 0 2px 5px rgba(0,0,0,0.2); }
 
-        .gen-btn { width: 100%; padding: 18px; background: #007bb5; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 17px; font-weight: bold; margin-top: 25px; transition: 0.3s; }
-        .gen-btn:hover { background: #005f8d; }
+        .gen-btn { width: 100%; padding: 18px; background: #007bb5; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 17px; font-weight: bold; margin-top: 25px; }
         #kep-preview { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: none; margin: 10px auto; border: 3px solid #007bb5; }
     </style>
 </head>
@@ -37,9 +37,10 @@
         <div class="ats-info">
             <h4>🚀 ROBOT-BIZTOS (ATS) TIPPEK:</h4>
             <ul>
-                <li><strong>Cím formátum:</strong> Kérjük, így adja meg: <em>Város, Utca, Házszám</em>.</li>
-                <li><strong>Nyelv:</strong> Az "Only" módokban a név és cím is lefordul.</li>
-                <li><strong>Stílus:</strong> 10 szín közül választhat.</li>
+                <li><strong>Cím formátum:</strong> Város, Utca, Házszám formában add meg!</li>
+                <li><strong>Fordítás:</strong> Az "Only" módokban a név és a cím is lefordul.</li>
+                <li><strong>Stílus:</strong> 10 színből választhatsz a listából.</li>
+                <li><strong>Mentés:</strong> Generálás után használd a PDF mentése gombot!</li>
             </ul>
         </div>
 
@@ -47,7 +48,7 @@
         <input type="file" id="kep-input" accept="image/*" onchange="previewKep()">
         <img id="kep-preview">
 
-        <label>Válasszon módot:</label>
+        <label>Válassz nyelvi módot:</label>
         <div class="lang-grid">
             <button class="btn-lang btn-hu active" onclick="setMode('hu', this)">Csak Magyar</button>
             <button class="btn-lang btn-en-mix" onclick="setMode('en-mix', this)">HU + Angol</button>
@@ -72,7 +73,7 @@
 
         <label>Személyes adatok</label>
         <input type="text" id="nev" placeholder="Teljes Név">
-        <input type="text" id="cim" placeholder="Lakcím (Város, Utca, Házszám)">
+        <input type="text" id="cim" placeholder="Város, Utca, Házszám">
         <input type="text" id="tel" placeholder="Telefonszám">
         <input type="email" id="email" placeholder="E-mail cím">
         
@@ -80,7 +81,7 @@
         <textarea id="bemutat" placeholder="Bemutatkozás..." rows="3"></textarea>
         <textarea id="suli" placeholder="Tanulmányok..." rows="3"></textarea>
         <textarea id="tapa" placeholder="Tapasztalat..." rows="4"></textarea>
-        <input type="text" id="kesz" placeholder="Készségek...">
+        <input type="text" id="kesz" placeholder="Készségek, szoftverek...">
         
         <button class="gen-btn" onclick="generalas()">PDF GENERÁLÁSA</button>
     </div>
@@ -118,7 +119,7 @@
 
         async function generalas() {
             const btn = document.querySelector('.gen-btn');
-            btn.innerText = "FELDOLGOZÁS...";
+            btn.innerText = "FORDÍTÁS ÉS GENERÁLÁS...";
             const lang = mode.split('-')[0];
             
             const data = {
@@ -149,38 +150,4 @@
 
             const html = `<html><head><meta charset="UTF-8"><style>
                 body { font-family: sans-serif; display: flex; margin: 0; min-height: 100vh; }
-                .sidebar { background: ${szin}; color: white; width: 32%; padding: 30px; -webkit-print-color-adjust: exact; }
-                .main { width: 68%; padding: 45px; }
-                .p-img { width: 120px; height: 120px; border-radius: 50%; border: 4px solid white; object-fit: cover; margin-bottom: 20px; }
-                h1 { margin:0; text-transform: uppercase; font-size: 28px; }
-                h3 { border-bottom: 2px solid ${szin}; color: ${szin}; text-transform: uppercase; margin-top: 25px; font-size: 15px; }
-                .sidebar h3 { color: white; border-bottom: 1px solid rgba(255,255,255,0.3); }
-                p { white-space: pre-line; line-height: 1.5; font-size: 14px; margin-bottom: 5px; }
-                .tr { color: #666; font-style: italic; font-size: 13px; display: block; }
-                .sidebar .tr { color: #ddd; }
-                .no-print { position: fixed; top: 10px; right: 10px; padding: 12px 20px; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 6px; font-weight: bold; }
-            </style></head><body>
-                <button class="no-print" onclick="window.print()">MENTÉS PDF</button>
-                <div class="sidebar">
-                    ${profilKepData ? `<img src="${profilKepData}" class="p-img">` : ''}
-                    <h3>${L('c')}</h3>
-                    <p>${!isOnly ? data.cim : ''}${data.cim_tr && !isOnly ? '<br>' : ''}${data.cim_tr ? `<span class="tr">${data.cim_tr}</span>` : ''}</p>
-                    <p>${data.tel}<br>${data.email}</p>
-                    ${data.kesz ? `<h3>${L('s')}</h3><p>${!isOnly ? data.kesz : ''}</p>${data.kes_tr ? `<span class="tr">${data.kes_tr}</span>` : ''}` : ''}
-                </div>
-                <div class="main">
-                    <h1 style="color:${szin};">${!isOnly ? data.nev : data.nev_tr}</h1>
-                    ${!isOnly && data.nev_tr && data.nev !== data.nev_tr ? `<span class="tr" style="font-size: 18px;">${data.nev_tr}</span>` : ''}
-                    ${data.bemutat ? `<h3>${L('p')}</h3><p>${!isOnly ? data.bemutat : ''}</p>${data.bemutat_tr ? `<span class="tr">${data.bemutat_tr}</span>` : ''}` : ''}
-                    ${data.suli ? `<h3>${L('e')}</h3><p>${!isOnly ? data.suli : ''}</p>${data.suli_tr ? `<span class="tr">${data.suli_tr}</span>` : ''}` : ''}
-                    ${data.tapa ? `<h3>${L('ex')}</h3><p>${!isOnly ? data.tapa : ''}</p>${data.tapa_tr ? `<span class="tr">${data.tapa_tr}</span>` : ''}` : ''}
-                </div></body></html>`;
-            
-            const win = window.open("", "_blank");
-            win.document.write(html);
-            win.document.close();
-            btn.innerText = "PDF GENERÁLÁSA";
-        }
-    </script>
-</body>
-</html>
+                .sidebar { background: ${szin}; color: white; width: 32%; padding: 30px; -webkit-
