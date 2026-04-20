@@ -2,7 +2,7 @@
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
-    <title>Aion Mátrix - Önéletrajz</title>
+    <title>Aion Labor - Profi Önéletrajz</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; padding: 20px; margin: 0; }
         .container { max-width: 650px; background: white; padding: 35px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin: auto; }
@@ -27,7 +27,7 @@
         <h2>Aion Mátrix - Önéletrajz</h2>
         <div class="ats-info">
             <h4>🚀 Robot-biztos (ATS) Tippek:</h4>
-            <p>Válasszon nyelvi módot. Az "Only" verziókban a címszavak is lefordulnak!</p>
+            <p>10 választható stílus. Az "Only" módokban már a név és cím is lefordul!</p>
         </div>
 
         <label>Válasszon PDF kimenetet:</label>
@@ -39,11 +39,23 @@
             <button class="btn-lang btn-de-only" onclick="setMode('de-only', this)">Csak Német</button>
         </div>
         
-        <label>Design stílus:</label>
-        <select id="szinvalaszto"><option value="#007bb5">Mátrix Kék</option><option value="#1a3a5a">Éjfélkék</option><option value="#4a4a4a">Antracit</option></select>
+        <label>Design stílus (10 szín):</label>
+        <select id="szinvalaszto">
+            <option value="#007bb5">Mátrix Kék</option>
+            <option value="#1a3a5a">Éjfélkék</option>
+            <option value="#4a4a4a">Antracit</option>
+            <option value="#2ecc71">Smaragdzöld</option>
+            <option value="#e67e22">Naplemente Narancs</option>
+            <option value="#b33939">Bordeaux Vörös</option>
+            <option value="#8e44ad">Amethyst Lila</option>
+            <option value="#2c3e50">Sötét Pala</option>
+            <option value="#d35400">Téglavörös</option>
+            <option value="#16a085">Türkizkék</option>
+        </select>
 
         <label>Személyes adatok</label>
-        <input type="text" id="nev" placeholder="Név"><input type="text" id="cim" placeholder="Cím"><input type="text" id="tel" placeholder="Telefon"><input type="email" id="email" placeholder="Email">
+        <input type="text" id="nev" placeholder="Név"><input type="text" id="cim" placeholder="Cím (Város, utca...)">
+        <input type="text" id="tel" placeholder="Telefon"><input type="email" id="email" placeholder="Email">
         <textarea id="bemutat" placeholder="Profil / Bemutatkozás..." rows="3"></textarea>
         <textarea id="suli" placeholder="Tanulmányok..." rows="3"></textarea>
         <textarea id="tapa" placeholder="Tapasztalat..." rows="4"></textarea>
@@ -67,27 +79,37 @@
         }
 
         async function translate(text, lang) {
-            if (!text || lang === 'hu') return "";
+            if (!text || lang === 'hu') return text || "";
             try {
                 const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=hu|${lang}`);
                 const data = await res.json();
                 return data.responseData.translatedText;
-            } catch (e) { return ""; }
+            } catch (e) { return text; }
         }
 
         async function generalas() {
+            const btn = event.target;
+            btn.innerText = "MÉLYSZKENNELÉS ÉS FORDÍTÁS...";
             const lang = mode.split('-')[0];
+            
             const data = {
-                nev: document.getElementById('nev').value, cim: document.getElementById('cim').value,
-                tel: document.getElementById('tel').value, email: document.getElementById('email').value,
-                bemutat: document.getElementById('bemutat').value, suli: document.getElementById('suli').value,
-                tapa: document.getElementById('tapa').value, kesz: document.getElementById('kesz').value,
+                nev: document.getElementById('nev').value,
+                nev_tr: await translate(document.getElementById('nev').value, lang),
+                cim: document.getElementById('cim').value,
+                cim_tr: await translate(document.getElementById('cim').value, lang),
+                tel: document.getElementById('tel').value,
+                email: document.getElementById('email').value,
+                bemutat: document.getElementById('bemutat').value,
                 bemutat_tr: await translate(document.getElementById('bemutat').value, lang),
+                suli: document.getElementById('suli').value,
                 suli_tr: await translate(document.getElementById('suli').value, lang),
+                tapa: document.getElementById('tapa').value,
                 tapa_tr: await translate(document.getElementById('tapa').value, lang),
+                kesz: document.getElementById('kesz').value,
                 kes_tr: await translate(document.getElementById('kesz').value, lang)
             };
             megjelenit(document.getElementById('szinvalaszto').value, data, mode);
+            btn.innerText = "PDF GENERÁLÁSA";
         }
 
         function megjelenit(szin, d, m) {
@@ -95,37 +117,27 @@
             const lang = m.split('-')[0];
             const dict = dictionary[lang];
             const huDict = dictionary['hu'];
-
-            const getL = (key) => {
-                if (m === 'hu') return huDict[key];
-                if (isOnly) return dict[key];
-                return `${huDict[key]} / ${dict[key]}`;
-            };
+            const getL = (key) => (m === 'hu' ? huDict[key] : (isOnly ? dict[key] : `${huDict[key]} / ${dict[key]}`));
 
             const html = `<html><head><style>
                 body { font-family: sans-serif; display: flex; margin: 0; min-height: 100vh; }
                 .sidebar { background: ${szin}; color: white; width: 32%; padding: 30px; -webkit-print-color-adjust: exact; }
                 .main { width: 68%; padding: 45px; }
-                h3 { border-bottom: 2px solid ${szin}; color: ${szin}; text-transform: uppercase; margin-top: 25px; font-size: 16px; }
-                .sidebar h3 { color: white; border-bottom: 1px solid rgba(255,255,255,0.5); }
-                p { white-space: pre-line; line-height: 1.5; font-size: 14px; }
-                .tr { color: #666; font-style: italic; font-size: 13.5px; display: block; margin-top: 5px; }
-                .sidebar .tr { color: #ccc; }
-                .no-print { position: fixed; top: 10px; right: 10px; padding: 12px; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; }
+                h3 { border-bottom: 2px solid ${szin}; color: ${szin}; text-transform: uppercase; margin-top: 25px; font-size: 15px; letter-spacing: 1px; }
+                .sidebar h3 { color: white; border-bottom: 1px solid rgba(255,255,255,0.3); }
+                p { white-space: pre-line; line-height: 1.5; font-size: 14px; margin-bottom: 8px; }
+                .tr { color: #666; font-style: italic; font-size: 13px; display: block; margin-top: 4px; }
+                .sidebar .tr { color: #ddd; }
+                .no-print { position: fixed; top: 10px; right: 10px; padding: 12px; background: #2ecc71; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; }
             </style></head><body>
-                <button class="no-print" onclick="window.print()">MENTÉS PDF</button>
+                <button class="no-print" onclick="window.print()">NYOMTATÁS / PDF</button>
                 <div class="sidebar">
-                    <h3>${getL('contact')}</h3><p>${d.cim}<br>${d.tel}<br>${d.email}</p>
+                    <h3>${getL('contact')}</h3>
+                    <p>${!isOnly ? d.cim : ''}${d.cim_tr && !isOnly ? '<br>' : ''}${d.cim_tr ? `<span class="tr">${d.cim_tr}</span>` : ''}</p>
+                    <p>${d.tel}<br>${d.email}</p>
                     ${d.kesz ? `<h3>${getL('skills')}</h3><p>${!isOnly ? d.kesz : ''}</p>${d.kes_tr ? `<span class="tr">${d.kes_tr}</span>` : ''}` : ''}
                 </div>
                 <div class="main">
-                    <h1 style="color:${szin}; margin:0; text-transform: uppercase;">${d.nev}</h1>
-                    ${d.bemutat ? `<h3>${getL('profile')}</h3><p>${!isOnly ? d.bemutat : ''}</p>${d.bemutat_tr ? `<span class="tr">${d.bemutat_tr}</span>` : ''}` : ''}
-                    ${d.suli ? `<h3>${getL('edu')}</h3><p>${!isOnly ? d.suli : ''}</p>${d.suli_tr ? `<span class="tr">${d.suli_tr}</span>` : ''}` : ''}
-                    ${d.tapa ? `<h3>${getL('exp')}</h3><p>${!isOnly ? d.tapa : ''}</p>${d.tapa_tr ? `<span class="tr">${d.tapa_tr}</span>` : ''}` : ''}
-                </div></body></html>`;
-            const win = window.open(); win.document.write(html); win.document.close();
-        }
-    </script>
-</body>
-</html>
+                    <h1 style="color:${szin}; margin:0;">${!isOnly ? d.nev : d.nev_tr}</h1>
+                    ${!isOnly && d.nev_tr && d.nev !== d.nev_tr ? `<span class="tr" style="font-size: 18px;">${d.nev_tr}</span>` : ''}
+                    ${d.bemutat ? `<h3>${getL('profile')}</h3><p>${!isOnly ? d.bemutat : ''}</p>${d.bemutat_
