@@ -36,17 +36,17 @@
         <div class="ats-info">
             <h4>🚀 ROBOT-BIZTOS (ATS) TIPPEK:</h4>
             <ul>
-                <li><strong>Cím formátum:</strong> Város, Utca, Házszám formában add meg!</li>
-                <li><strong>Fordítás:</strong> Az "Only" módokban a név és a cím is lefordul.</li>
-                <li><strong>Stílus:</strong> 10 színből választhatsz a listából.</li>
+                <li><strong>Szoftverek:</strong> Konkrét neveket írj (pl. SAP, Minitab, Predor)!</li>
+                <li><strong>Mérhető eredmények:</strong> Használj számokat (pl. napi 200 vendég)!</li>
+                <li><strong>Titulusok:</strong> Használj hivatalos megnevezéseket (pl. Raktárvezető)!</li>
             </ul>
         </div>
 
-        <label>Profilkép feltöltése:</label>
+        <label>Profilkép:</label>
         <input type="file" id="kep-input" accept="image/*" onchange="previewKep()">
         <img id="kep-preview">
 
-        <label>Válassz nyelvi módot:</label>
+        <label>Nyelvi mód:</label>
         <div class="lang-grid">
             <button class="btn-lang btn-hu active" onclick="setMode('hu', this)">Csak Magyar</button>
             <button class="btn-lang btn-en-mix" onclick="setMode('en-mix', this)">HU + Angol</button>
@@ -106,7 +106,7 @@
         }
 
         async function translate(text, lang) {
-            if (!text || lang === 'hu') return ""; // ZÉRÓ FORDÍTÁS Csak Magyar módban
+            if (!text || lang === 'hu' || mode === 'hu') return ""; 
             try {
                 const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=hu|${lang}`);
                 const data = await res.json();
@@ -116,11 +116,10 @@
 
         async function generalas() {
             const btn = document.querySelector('.gen-btn');
-            btn.innerText = "FORDÍTÁS ÉS GENERÁLÁS...";
+            btn.innerText = "FELDOLGOZÁS...";
             const lang = mode.split('-')[0];
             const isOnly = mode.includes('only');
             
-            // ADATOK ELŐKÉSZÍTÉSE
             const adatok = {
                 nev: document.getElementById('nev').value,
                 cim: document.getElementById('cim').value,
@@ -132,7 +131,6 @@
                 kesz: document.getElementById('kesz').value
             };
 
-            // FORDÍTÁSOK LEKÉRÉSE (Csak ha kell)
             const tr = {
                 nev: (mode !== 'hu' && isOnly) ? await translate(adatok.nev, lang) : "",
                 cim: (mode !== 'hu') ? await translate(adatok.cim, lang) : "",
@@ -161,7 +159,6 @@
                 p { white-space: pre-line; line-height: 1.6; font-size: 14px; margin: 0 0 10px 0; }
                 .tr { color: #666; font-style: italic; font-size: 13px; display: block; margin-top: -5px; margin-bottom: 10px; }
                 .sidebar .tr { color: #ddd; }
-                .name-tr { color: #666; font-size: 18px; text-transform: uppercase; margin-top: 5px; display: block; }
                 .no-print { position: fixed; top: 10px; right: 10px; padding: 12px 20px; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 6px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 1000; }
             </style></head><body>
                 <button class="no-print" onclick="window.print()">NYOMTATÁS / MENTÉS</button>
@@ -175,15 +172,19 @@
                 </div>
                 <div class="main">
                     <h1>${!isOnly ? adatok.nev : tr.nev}</h1>
-                    ${!isOnly && tr.nev ? `<span class="name-tr">${tr.nev}</span>` : ''}
+                    ${!isOnly && tr.nev ? `<span class="tr" style="font-size: 18px; text-transform: uppercase; margin-top: 5px;">${tr.nev}</span>` : ''}
                     ${adatok.bemutat ? `<h3>${L('p')}</h3><p>${!isOnly ? adatok.bemutat : tr.bemutat}</p>${!isOnly && tr.bemutat ? `<span class="tr">${tr.bemutat}</span>` : ''}` : ''}
                     ${adatok.suli ? `<h3>${L('e')}</h3><p>${!isOnly ? adatok.suli : tr.suli}</p>${!isOnly && tr.suli ? `<span class="tr">${tr.suli}</span>` : ''}` : ''}
                     ${adatok.tapa ? `<h3>${L('ex')}</h3><p>${!isOnly ? adatok.tapa : tr.tapa}</p>${!isOnly && tr.tapa ? `<span class="tr">${tr.tapa}</span>` : ''}` : ''}
                 </div></body></html>`;
             
             const win = window.open("", "_blank");
-            win.document.write(html);
-            win.document.close();
+            if (win) {
+                win.document.write(html);
+                win.document.close();
+            } else {
+                alert("Engedélyezd a felugró ablakokat a Brave-ben!");
+            }
             btn.innerText = "PDF GENERÁLÁSA";
         }
     </script>
